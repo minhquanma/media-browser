@@ -14,6 +14,9 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import { ListItemSecondaryAction } from "@material-ui/core";
+
+import { format } from "date-fns";
 
 type FileListItemProps = {
   onOpenDialog?: Function | undefined;
@@ -46,23 +49,6 @@ const FileListItem = ({
     }
   };
 
-  const ExpandIcon = isExpand ? ExpandLess : ExpandMore;
-
-  const sizeInMB = useMemo(
-    () =>
-      fileItem.isDirectory
-        ? "folder"
-        : `${Math.round(fileItem.size / 1024 / 1024).toFixed(2)} MB`,
-    [fileItem.size]
-  );
-
-  const style = useMemo(
-    () => ({
-      paddingLeft: 10 + padding,
-    }),
-    [padding]
-  );
-
   const renderChildren = () => {
     if (fileItem.children.length) {
       return fileItem.children.map((fileItemChild: any) => {
@@ -77,6 +63,28 @@ const FileListItem = ({
     }
   };
 
+  const sizeInMB = useMemo(
+    () =>
+      fileItem.isDirectory
+        ? ``
+        : `${Math.round(fileItem.size / 1024 / 1024).toFixed(2)} MB`,
+    [fileItem.size]
+  );
+
+  const lastModified = `Last modified: ${format(
+    new Date(fileItem.modifiedDateTime),
+    "MM/dd/yyyy - hh:mm"
+  )}`;
+
+  const style = useMemo(
+    () => ({
+      paddingLeft: 10 + padding,
+    }),
+    [padding]
+  );
+
+  const ExpandIcon = isExpand ? ExpandLess : ExpandMore;
+
   return (
     <>
       <ListItem button onClick={handleClick} style={style}>
@@ -89,7 +97,8 @@ const FileListItem = ({
             )}
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={fileItem.name} secondary={sizeInMB} />
+        <ListItemText primary={fileItem.name} secondary={lastModified} />
+        <ListItemSecondaryAction>{sizeInMB}</ListItemSecondaryAction>
         {fileItem.isDirectory && <ExpandIcon />}
       </ListItem>
       <Collapse in={isExpand} timeout="auto" unmountOnExit>

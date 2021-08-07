@@ -1,11 +1,18 @@
+import { useState } from "react";
+import { FILTER_OPTIONS, FILTERS } from "constants/options";
 import useStyles from "./Header.Styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
-import { FILTER_OPTIONS } from "constants/options";
 
-const Header: React.FC = ({ children }) => {
+function Header({}) {
   const classes = useStyles();
+  const [filter, setFilter] = useState(FILTERS.DATE_ASC);
+
+  function handleFilterChange(e) {
+    setFilter(e.target.value);
+  }
+
   return (
     <div className={classes.root}>
       <FormControl className={classes.margin}>
@@ -13,13 +20,13 @@ const Header: React.FC = ({ children }) => {
           id="outlined-select-currency-native"
           select
           label="Sort by"
-          value={1}
-          onChange={() => {}}
+          value={filter}
+          onChange={handleFilterChange}
           variant="outlined"
           size="small"
         >
           {FILTER_OPTIONS.map((option) => (
-            <MenuItem key={option.id} value={option.name}>
+            <MenuItem key={option.id} value={option.id}>
               {option.name}
             </MenuItem>
           ))}
