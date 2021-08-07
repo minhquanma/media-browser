@@ -37,6 +37,8 @@ app.get("/fileList", (req, res) => {
     (file) => file.name.split(".").pop() !== "parts"
   );
 
+  console.log(filteredFileList);
+
   res.send(filteredFileList);
 });
 
@@ -53,10 +55,7 @@ app.post("/videoPreview", async (req, res) => {
     fileName,
     inputPath,
     url,
-    shots: 12,
   });
-
-  console.log(results);
 
   res.status(200).send(results);
 });

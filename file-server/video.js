@@ -1,6 +1,13 @@
 import ffmpeg from "fluent-ffmpeg";
-
+import { secondsToHours } from "./commons/time.js";
 import { SCREENSHOT_DIR } from "./commons/const.js";
+
+const getRandomIntegerInRange = (min, max) => {
+  const minInt = Math.ceil(min);
+  const maxInt = Math.floor(max);
+
+  return Math.floor(Math.random() * (maxInt - minInt + 1) + minInt);
+};
 
 const getVideoInfo = (inputPath) => {
   return new Promise((resolve, reject) => {
@@ -19,20 +26,25 @@ const getVideoInfo = (inputPath) => {
   });
 };
 
-const getRandomIntegerInRange = (min, max) => {
-  const minInt = Math.ceil(min);
-  const maxInt = Math.floor(max);
-
-  return Math.floor(Math.random() * (maxInt - minInt + 1) + minInt);
-};
-
 export const createScreenshots = async ({
   fileName,
   inputPath,
   url,
-  shots = 12,
+  shots = 10,
 }) => {
   const { durationInSeconds } = await getVideoInfo(inputPath);
+
+  const { hours } = secondsToHours(durationInSeconds);
+
+  if (hours >= 4) {
+    shots = 30;
+  } else if (hours >= 3) {
+    shots = 25;
+  } else if (hours >= 2) {
+    shots = 20;
+  } else {
+    shots = 15;
+  }
 
   const seconds = createSteps(durationInSeconds, shots);
 
@@ -42,7 +54,7 @@ export const createScreenshots = async ({
         ffmpeg()
           .input(inputPath)
           .inputOptions([`-ss ${second}`])
-          .outputOptions(["-vframes 1", "-q:v 3"])
+          .outputOptions(["-vframes 1", "-q:v 6"])
           .noAudio()
           .output(`./${SCREENSHOT_DIR}/${fileName}_${second}.jpg`)
           .on("end", () => {
@@ -56,13 +68,6 @@ export const createScreenshots = async ({
     })
   );
 };
-
-// function createScreenshots() {
-//   const time = '';
-//   const input = '';
-//   const output = ''
-//   `ffmpeg -ss ${time} -i ${input} -vframes 1 -q:v 3  ${output}`
-// }
 
 function createSteps(input, stepCount) {
   const step = Math.round(input / stepCount);
