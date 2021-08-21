@@ -37,8 +37,6 @@ app.get("/fileList", (req, res) => {
     (file) => file.name.split(".").pop() !== "parts"
   );
 
-  console.log(filteredFileList);
-
   res.send(filteredFileList);
 });
 

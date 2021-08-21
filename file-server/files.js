@@ -23,6 +23,7 @@ export const getFileList = (url, inputPath) => {
           path: filePath,
           name: file,
           size: stats.size,
+          modifiedDateTime: stats.mtime,
         },
       ];
     } catch (err) {

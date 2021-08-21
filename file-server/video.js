@@ -37,36 +37,40 @@ export const createScreenshots = async ({
   const { hours } = secondsToHours(durationInSeconds);
 
   if (hours >= 4) {
-    shots = 30;
-  } else if (hours >= 3) {
     shots = 25;
-  } else if (hours >= 2) {
+  } else if (hours >= 3) {
     shots = 20;
-  } else {
+  } else if (hours >= 2) {
     shots = 15;
+  } else {
+    shots = 12;
   }
 
   const seconds = createSteps(durationInSeconds, shots);
 
-  return Promise.all(
-    seconds.map((second) => {
-      return new Promise(async (resolve, reject) => {
-        ffmpeg()
-          .input(inputPath)
-          .inputOptions([`-ss ${second}`])
-          .outputOptions(["-vframes 1", "-q:v 6"])
-          .noAudio()
-          .output(`./${SCREENSHOT_DIR}/${fileName}_${second}.jpg`)
-          .on("end", () => {
-            resolve({
-              url: `${url}/${fileName}_${second}.jpg`,
-            });
-          })
-          .on("error", reject)
-          .run();
-      });
-    })
-  );
+  const urlList = [];
+
+  for (const second of seconds) {
+    const generateScreenshot = new Promise(async (resolve, reject) => {
+      ffmpeg()
+        .input(inputPath)
+        .inputOptions([`-ss ${second}`])
+        .outputOptions(["-vframes 1", "-q:v 6"])
+        .noAudio()
+        .output(`./${SCREENSHOT_DIR}/${fileName}_${second}.jpg`)
+        .on("end", () => {
+          resolve({
+            url: `${url}/${fileName}_${second}.jpg`,
+          });
+        })
+        .on("error", reject)
+        .run();
+    });
+
+    urlList.push(await generateScreenshot);
+  }
+
+  return urlList;
 };
 
 function createSteps(input, stepCount) {
