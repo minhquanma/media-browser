@@ -1,15 +1,20 @@
-export const FILTERS = {
+export const SORTS = {
+  DEFAULT: "DEFAULT",
   DATE_ASC: "DATE_ASC",
   DATE_DESC: "DATE_DESC",
 };
 
-export const FILTER_OPTIONS = [
+export const SORT_OPTIONS = [
   {
-    id: FILTERS.DATE_ASC,
-    name: "Date asc",
+    id: SORTS.DEFAULT,
+    name: "Default",
   },
   {
-    id: FILTERS.DATE_DESC,
-    name: "Date desc",
+    id: SORTS.DATE_ASC,
+    name: "Newest",
+  },
+  {
+    id: SORTS.DATE_DESC,
+    name: "Oldest",
   },
 ];

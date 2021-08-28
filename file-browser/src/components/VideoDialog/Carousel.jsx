@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function Carousel({ images = [{ url: placeHolderImg }] }: any) {
+export function Carousel({ images = [{ url: placeHolderImg }] }) {
   const classes = useStyles();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -51,7 +51,7 @@ export function Carousel({ images = [{ url: placeHolderImg }] }: any) {
     }
   };
 
-  const imageUrl = images[selectedImageIndex].url;
+  const imageUrl = images[selectedImageIndex]?.url || placeHolderImg;
 
   return (
     <div className={classes.container}>

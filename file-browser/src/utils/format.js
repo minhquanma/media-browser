@@ -1,3 +1,1 @@
-export formatFileSize = (sizeInBytes) => {
-    if 
-}
+export const formatFileSize = (sizeInBytes) => {};

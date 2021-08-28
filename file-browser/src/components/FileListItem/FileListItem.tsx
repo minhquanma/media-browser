@@ -71,9 +71,9 @@ const FileListItem = ({
     [fileItem.size]
   );
 
-  const lastModified = `Last modified: ${format(
+  const lastModified = `Last update: ${format(
     new Date(fileItem.modifiedDateTime),
-    "MM/dd/yyyy - hh:mm"
+    " hh:mm - MM/dd/yy"
   )}`;
 
   const style = useMemo(
@@ -97,8 +97,14 @@ const FileListItem = ({
             )}
           </Avatar>
         </ListItemAvatar>
-        <ListItemText primary={fileItem.name} secondary={lastModified} />
-        <ListItemSecondaryAction>{sizeInMB}</ListItemSecondaryAction>
+        <ListItemText
+          primary={fileItem.name}
+          secondary={
+            <>
+              {lastModified} {sizeInMB}
+            </>
+          }
+        />
         {fileItem.isDirectory && <ExpandIcon />}
       </ListItem>
       <Collapse in={isExpand} timeout="auto" unmountOnExit>

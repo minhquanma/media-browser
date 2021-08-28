@@ -19,31 +19,29 @@ const useStyles = makeStyles({
   },
 });
 
-export interface VideoDialogProps {
-  open: boolean;
-  fileItem: any;
-  onClose: () => void;
-}
-
-function VideoDialog(props: VideoDialogProps) {
+function VideoDialog({ onClose, fileItem, open }) {
   const classes = useStyles();
-  const { onClose, fileItem, open } = props;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<any>();
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
-    async function runAsync() {
-      setIsLoading(true);
-      const data = await getVideoPreview({
-        inputPath: fileItem.path,
-        fileName: fileItem.name,
-      });
-      setIsLoading(false);
+    async function fetchVideoPreview() {
+      if (open) {
+        setIsLoading(true);
+        setImages([]);
 
-      setImages(data);
+        const data = await getVideoPreview({
+          inputPath: fileItem.path,
+          fileName: fileItem.name,
+        });
+
+        setIsLoading(false);
+        setImages(data);
+      }
     }
 
-    open && runAsync();
+    fetchVideoPreview();
   }, [open]);
 
   const handleOpenClick = () => {
