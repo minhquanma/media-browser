@@ -5,7 +5,7 @@ import Container from "@material-ui/core/Container";
 
 function App() {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <FileList />
     </Container>
   );

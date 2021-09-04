@@ -4,8 +4,7 @@ import Button from "@material-ui/core/Button";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
-import ClipLoader from "react-spinners/ClipLoader";
-
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { Carousel } from "./Carousel";
 import { getVideoPreview } from "api/video.api";
 
@@ -44,11 +43,6 @@ function VideoDialog({ onClose, fileItem, open }) {
     fetchVideoPreview();
   }, [open]);
 
-  const handleOpenClick = () => {
-    window.open(fileItem.url);
-    onClose();
-  };
-
   const handleClose = () => {
     onClose();
   };
@@ -61,15 +55,11 @@ function VideoDialog({ onClose, fileItem, open }) {
     >
       <DialogTitle id="simple-dialog-title">{fileItem?.name}</DialogTitle>
       <div className={classes.screenshot}>
-        {isLoading ? (
-          <ClipLoader color={"navy"} />
-        ) : (
-          <Carousel images={images} />
-        )}
+        {isLoading ? <CircularProgress /> : <Carousel images={images} />}
       </div>
       <DialogActions>
-        <Button onClick={handleOpenClick} color="primary" autoFocus>
-          Open
+        <Button href={fileItem?.url} color="primary" autoFocus>
+          Url
         </Button>
         <Button onClick={handleClose} color="primary">
           Cancel
