@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo, memo } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
@@ -11,20 +11,13 @@ import Collapse from "@material-ui/core/Collapse";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import StarBorder from "@material-ui/icons/StarBorder";
 import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import { ListItemSecondaryAction } from "@material-ui/core";
 
 import { format } from "date-fns";
+import { formatFileSize } from "utils/format";
 
-type FileListItemProps = {
-  onOpenDialog?: Function | undefined;
-  fileItem: any;
-  padding?: number | undefined;
-};
-
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       width: "100%",
@@ -33,11 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const FileListItem = ({
-  onOpenDialog,
-  fileItem,
-  padding = 0,
-}: FileListItemProps) => {
+const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
   const classes = useStyles();
   const [isExpand, setExpand] = useState(false);
 
@@ -51,7 +40,7 @@ const FileListItem = ({
 
   const renderChildren = () => {
     if (fileItem.children.length) {
-      return fileItem.children.map((fileItemChild: any) => {
+      return fileItem.children.map((fileItemChild) => {
         return (
           <FileListItem
             onOpenDialog={onOpenDialog}
@@ -64,10 +53,7 @@ const FileListItem = ({
   };
 
   const sizeInMB = useMemo(
-    () =>
-      fileItem.isDirectory
-        ? ``
-        : `${Math.round(fileItem.size / 1024 / 1024).toFixed(2)} MB`,
+    () => (fileItem.isDirectory ? `` : formatFileSize(fileItem.size)),
     [fileItem.size]
   );
 
