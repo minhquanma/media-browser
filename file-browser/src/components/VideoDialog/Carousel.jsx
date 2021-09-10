@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import placeHolderImg from "assets/placeholder.jpg";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -18,6 +17,13 @@ const useStyles = makeStyles({
     height: "100%",
     width: "100%",
   },
+  navigationContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+  },
   leftButton: {
     position: "absolute",
     bottom: 0,
@@ -28,6 +34,7 @@ const useStyles = makeStyles({
     bottom: 0,
     right: 100,
   },
+  number: {},
 });
 
 export function Carousel({ images = [{ url: placeHolderImg }] }) {
@@ -56,15 +63,23 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
   return (
     <div className={classes.container}>
       <img className={classes.image} src={imageUrl} />
+      <div className={classes.navigationContainer}>
+        <span className={classes.number}>
+          {selectedImageIndex + 1}/{images.length}
+        </span>
+      </div>
       <IconButton
-        aria-label="delete"
+        color="primary"
+        aria-label="previous"
         className={classes.leftButton}
         onClick={handleBackClick}
       >
         <ChevronLeftIcon fontSize="small" />
       </IconButton>
+
       <IconButton
-        aria-label="delete"
+        color="primary"
+        aria-label="next"
         className={classes.rightButton}
         onClick={handleRightClick}
       >
