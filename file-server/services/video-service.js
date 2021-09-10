@@ -1,6 +1,6 @@
 import ffmpeg from "fluent-ffmpeg";
-import { secondsToHours } from "./commons/time.js";
-import { SCREENSHOT_DIR } from "./commons/const.js";
+import { secondsToHours } from "../commons/time.js";
+import { SCREENSHOT_DIR } from "../commons/const.js";
 
 const getRandomIntegerInRange = (min, max) => {
   const minInt = Math.ceil(min);
