@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import placeHolderImg from "assets/placeholder.jpg";
+import placeHolderImg from "assets/thumb_placeholder.png";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -10,31 +10,31 @@ const useStyles = makeStyles({
     height: 180,
     width: 320,
     position: "relative",
+    display: "grid",
+  },
+  thumb: {
+    width: "inherit",
+    height: "inherit",
+    gridArea: "1 / -1",
   },
   image: {
-    top: 0,
-    left: 0,
     height: "100%",
     width: "100%",
   },
-  navigationContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
+  navigator: {
+    gridArea: "1 / -1",
     display: "flex",
     justifyContent: "center",
+    alignItems: "end",
   },
-  leftButton: {
-    position: "absolute",
-    bottom: 0,
-    left: 100,
+  navigatorBox: {
+    backgroundColor: "#fffffff0",
+    marginBottom: 6,
+    borderRadius: 50,
+    display: "flex",
+    alignItems: "center",
   },
-  rightButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 100,
-  },
-  number: {},
+  thumbNo: {},
 });
 
 export function Carousel({ images = [{ url: placeHolderImg }] }) {
@@ -62,29 +62,32 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
 
   return (
     <div className={classes.container}>
-      <img className={classes.image} src={imageUrl} />
-      <div className={classes.navigationContainer}>
-        <span className={classes.number}>
-          {selectedImageIndex + 1}/{images.length}
-        </span>
+      <div className={classes.thumb}>
+        <img className={classes.image} src={imageUrl} />
       </div>
-      <IconButton
-        color="primary"
-        aria-label="previous"
-        className={classes.leftButton}
-        onClick={handleBackClick}
-      >
-        <ChevronLeftIcon fontSize="small" />
-      </IconButton>
-
-      <IconButton
-        color="primary"
-        aria-label="next"
-        className={classes.rightButton}
-        onClick={handleRightClick}
-      >
-        <ChevronRightIcon fontSize="small" />
-      </IconButton>
+      <div className={classes.navigator}>
+        <div className={classes.navigatorBox}>
+          <IconButton
+            color="primary"
+            aria-label="previous"
+            className={classes.leftButton}
+            onClick={handleBackClick}
+          >
+            <ChevronLeftIcon fontSize="small" />
+          </IconButton>
+          <span className={classes.thumbNo}>
+            {selectedImageIndex + 1}/{images.length}
+          </span>
+          <IconButton
+            color="primary"
+            aria-label="next"
+            className={classes.rightButton}
+            onClick={handleRightClick}
+          >
+            <ChevronRightIcon fontSize="small" />
+          </IconButton>
+        </div>
+      </div>
     </div>
   );
 }
