@@ -32,7 +32,6 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
         height: 180,
         width: 320,
         position: "relative",
-        display: "grid",
       }}
     >
       <Box
@@ -44,13 +43,19 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
         <img style={{ height: "100%", width: "100%" }} src={imageUrl} />
       </Box>
       <Box
-        sx={{ display: "flex", justifyContent: "center", alignItems: "end" }}
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+        }}
       >
         <Box
           sx={{
-            position: "absolute",
             backgroundColor: "#fffffff0",
-            marginBottom: 6,
+            marginBottom: 1,
             borderRadius: 50,
             display: "flex",
             alignItems: "center",
