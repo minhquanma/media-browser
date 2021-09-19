@@ -1,25 +1,16 @@
 import { useEffect, useState, useMemo, useRef } from "react";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Header from "components/Header/Header";
-import List from "@material-ui/core/List";
-
+import List from "@mui/material/List";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import FileListItem from "components/FileListItem/FileListItem";
 import VideoDialog from "components/VideoDialog/VideoDialog";
 import { getFileList } from "api/file.api";
 import { SORTS } from "constants/options";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
-
 export default function FileList() {
-  const classes = useStyles();
   const [dialogData, setDialogData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
   const [sortBy, setSortBy] = useState(SORTS.DATE_ASC);
   const [files, setFiles] = useState([]);
 
@@ -27,9 +18,14 @@ export default function FileList() {
 
   useEffect(() => {
     async function runAsync() {
+      setLoading(true);
       const data = await getFileList();
+
+      // Original files for frontend data filtering
       originalFiles.current = data;
+
       setFiles(data);
+      setLoading(false);
     }
 
     runAsync();
@@ -98,10 +94,15 @@ export default function FileList() {
             onSearch={handleSearch}
           ></Header>
         }
-        className={classes.root}
       >
         {renderFileItems()}
       </List>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </>
   );
 }

@@ -1,13 +1,18 @@
 import "./App.css";
 import React from "react";
 import FileList from "components/FileList/FileList";
-import Container from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
+import { ThemeProvider } from "@emotion/react";
+
+const theme = {};
 
 function App() {
   return (
-    <Container maxWidth="md">
-      <FileList />
-    </Container>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="md">
+        <FileList />
+      </Container>
+    </ThemeProvider>
   );
 }
 

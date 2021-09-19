@@ -8,6 +8,11 @@ const MOCK_VIDEO_PREVIEW = [
 ];
 
 export async function getVideoPreview(params: any) {
-  return MOCK_VIDEO_PREVIEW;
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => {
+  //     resolve(MOCK_VIDEO_PREVIEW);
+  //   }, 1000);
+  // });
+
   return await ApiService.post("/videoPreview", params);
 }

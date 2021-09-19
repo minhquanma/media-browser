@@ -1,33 +1,20 @@
 import { useEffect, useState, useMemo, memo } from "react";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import Avatar from "@material-ui/core/Avatar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import Collapse from "@material-ui/core/Collapse";
 
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import InsertDriveFileIcon from "@material-ui/icons/InsertDriveFile";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Avatar from "@mui/material/Avatar";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Collapse from "@mui/material/Collapse";
+
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
 import { format } from "date-fns";
 import { formatFileSize } from "utils/format";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      backgroundColor: theme.palette.background.paper,
-    },
-  })
-);
-
 const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
-  const classes = useStyles();
   const [isExpand, setExpand] = useState(false);
 
   const handleClick = () => {
@@ -45,7 +32,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
           <FileListItem
             onOpenDialog={onOpenDialog}
             fileItem={fileItemChild}
-            padding={8 + padding}
+            padding={2 + padding}
           />
         );
       });
@@ -64,7 +51,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
 
   const style = useMemo(
     () => ({
-      paddingLeft: 10 + padding,
+      pl: 1 + padding,
     }),
     [padding]
   );
@@ -73,7 +60,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
 
   return (
     <>
-      <ListItem button onClick={handleClick} style={style}>
+      <ListItemButton button onClick={handleClick} sx={style}>
         <ListItemAvatar>
           <Avatar>
             {fileItem.isDirectory ? (
@@ -92,7 +79,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
           }
         />
         {fileItem.isDirectory && <ExpandIcon />}
-      </ListItem>
+      </ListItemButton>
       <Collapse in={isExpand} timeout="auto" unmountOnExit>
         {renderChildren()}
       </Collapse>

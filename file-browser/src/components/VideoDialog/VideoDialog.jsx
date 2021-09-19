@@ -1,26 +1,14 @@
 import { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogTitle from "@mui/material/DialogTitle";
+import Skeleton from "@mui/material/Skeleton";
 import { Carousel } from "./Carousel";
 import { getVideoPreview } from "api/video.api";
 
-const useStyles = makeStyles({
-  screenshot: {
-    height: 180,
-    width: 320,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-
 function VideoDialog({ onClose, fileItem, open }) {
-  const classes = useStyles();
-
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
 
@@ -54,9 +42,21 @@ function VideoDialog({ onClose, fileItem, open }) {
       open={open}
     >
       <DialogTitle id="simple-dialog-title">{fileItem?.name}</DialogTitle>
-      <div className={classes.screenshot}>
-        {isLoading ? <CircularProgress /> : <Carousel images={images} />}
-      </div>
+      <Box
+        sx={{
+          height: 180,
+          width: 320,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isLoading ? (
+          <Skeleton variant="rectangular" height="100%" width="100%" />
+        ) : (
+          <Carousel images={images} />
+        )}
+      </Box>
       <DialogActions>
         <Button href={fileItem?.url} color="primary" autoFocus>
           Url

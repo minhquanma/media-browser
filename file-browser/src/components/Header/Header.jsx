@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { SORT_OPTIONS, SORTS } from "constants/options";
-import useStyles from "./Header.Styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
 
 function Header({ onSortChange, onSearch }) {
-  const classes = useStyles();
   const [sortBy, setSortBy] = useState(SORTS.DATE_ASC);
   const [searchKey, setSearchKey] = useState("");
   function handleSortChange(e) {
@@ -25,36 +23,38 @@ function Header({ onSortChange, onSearch }) {
   }
 
   return (
-    <div className={classes.root}>
-      <FormControl className={classes.margin}>
-        <TextField
-          label="Enter your search key here"
-          variant="outlined"
-          size="small"
-          value={searchKey}
-          onChange={handleSearchChange}
-          onKeyPress={handleSearchKeyPress}
-        />
-      </FormControl>
-      <span className={classes.spacer}></span>
-      <FormControl className={classes.margin}>
-        <TextField
-          id="outlined-select-currency-native"
-          select
-          label="Sort by"
-          value={sortBy}
-          onChange={handleSortChange}
-          variant="outlined"
-          size="small"
-        >
-          {SORT_OPTIONS.map((option) => (
-            <MenuItem key={option.id} value={option.id}>
-              {option.name}
-            </MenuItem>
-          ))}
-        </TextField>
-      </FormControl>
-    </div>
+    <Box
+      sx={{
+        padding: 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <TextField
+        label="Enter your search key here"
+        variant="outlined"
+        size="small"
+        value={searchKey}
+        onChange={handleSearchChange}
+        onKeyPress={handleSearchKeyPress}
+      />
+      <span className="spacer"></span>
+      <TextField
+        id="outlined-select-currency-native"
+        select
+        label="Sort by"
+        value={sortBy}
+        onChange={handleSortChange}
+        variant="outlined"
+        size="small"
+      >
+        {SORT_OPTIONS.map((option) => (
+          <MenuItem key={option.id} value={option.id}>
+            {option.name}
+          </MenuItem>
+        ))}
+      </TextField>
+    </Box>
   );
 }
 
