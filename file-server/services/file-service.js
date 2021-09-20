@@ -1,18 +1,19 @@
 import fs from "fs";
 import path from "path";
 
-export const getFileListByPath = (url, paths, excludedExtension) => {
-  const items = paths.map((path) => {
-    const stats = fs.statSync(path);
+export const getFileListByRootPaths = (url, rootPaths, excludedExtension) => {
+  const items = rootPaths.map((rootPath) => {
+    const stats = fs.statSync(rootPath.path);
 
     // Root item
     return {
       isDirectory: true,
-      name: path,
-      path: path,
+      isRoot: true,
+      name: rootPath.name,
+      path: rootPath.path,
       modifiedDateTime: stats.mtime,
       url: "",
-      children: getFileList(url, path, excludedExtension),
+      children: getFileList(url, rootPath.path, excludedExtension),
     };
   });
 

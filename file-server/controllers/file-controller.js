@@ -1,15 +1,20 @@
 import { STATIC_PATH, FILE_DIR, SCREENSHOT_PATH } from "../commons/const.js";
-import { getFileListByPath } from "../services/file-service.js";
+import { getFileListByRootPaths } from "../services/file-service.js";
 import { readConfig } from "../services/config-service.js";
 
 import { createScreenshots } from "../services/video-service.js";
 
-export function makeGetFileListApi({ getFileListByPath, readConfig }) {
-  return function getFileListApi(req, res) {
+export function makeGetFileListApi({ getFileListByRootPaths, readConfig }) {
+  return (app) => (req, res) => {
     const url = `${req.protocol}://${req.hostname}:${process.env.PORT}${STATIC_PATH}`;
-    const { paths, excludedExtension } = readConfig();
+    const { rootPaths, excludedExtension } = readConfig();
 
-    const items = getFileListByPath(url, paths, excludedExtension);
+    // Add path to express static
+    // paths.forEach((path) => {
+    //   app.use(path, express.static(path));
+    // });
+
+    const items = getFileListByRootPaths(url, rootPaths, excludedExtension);
 
     res.send(items);
   };
@@ -36,7 +41,7 @@ export function makeGetVideoPreviewApi({ createScreenshots }) {
 }
 
 export const getFileListApi = makeGetFileListApi({
-  getFileListByPath,
+  getFileListByRootPaths,
   readConfig,
 });
 export const getVideoPreviewApi = makeGetVideoPreviewApi({ createScreenshots });

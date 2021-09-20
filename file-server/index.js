@@ -30,7 +30,7 @@ app.use(
 app.use(STATIC_PATH, express.static(FILE_DIR));
 app.use(SCREENSHOT_PATH, express.static(SCREENSHOT_DIR));
 
-app.get("/fileList", getFileListApi);
+app.get("/fileList", getFileListApi(app));
 app.post("/videoPreview", getVideoPreviewApi);
 
 app.listen(process.env.PORT, () =>

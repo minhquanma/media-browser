@@ -1,6 +1,9 @@
 {
-    "paths": [
-        "C:\\Users\\MMQ\\Downloads"
+    "rootPaths": [
+        { 
+            "name": "N550JV Downloads",
+            "path": "C:\\Users\\MMQ\\Downloads"
+        }
     ],
     "excludedExtension": ["parts", "exe"]
 }
