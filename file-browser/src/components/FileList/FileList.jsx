@@ -8,6 +8,32 @@ import VideoDialog from "components/VideoDialog/VideoDialog";
 import { getFileList } from "api/file.api";
 import { SORTS } from "constants/options";
 
+// Temporary frontend sort
+function sortAllFiles(files, sortBy) {
+  const sortedFiles = files;
+
+  switch (sortBy) {
+    case SORTS.DATE_ASC:
+      sortedFiles.sort(
+        (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
+      );
+      break;
+    case SORTS.DATE_DESC:
+      sortedFiles.sort(
+        (a, b) => new Date(a.modifiedDateTime) - new Date(b.modifiedDateTime)
+      );
+    default:
+      break;
+  }
+
+  sortedFiles.forEach((file) => {
+    if (file.children) {
+      sortAllFiles(file.children, sortBy);
+    }
+  });
+
+  return sortedFiles;
+}
 export default function FileList() {
   const [dialogData, setDialogData] = useState(null);
   const [isLoading, setLoading] = useState(false);
@@ -32,18 +58,7 @@ export default function FileList() {
   }, []);
 
   const sortedFiles = useMemo(() => {
-    switch (sortBy) {
-      case SORTS.DATE_ASC:
-        return [...files].sort(
-          (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
-        );
-      case SORTS.DATE_DESC:
-        return [...files].sort(
-          (a, b) => new Date(a.modifiedDateTime) - new Date(b.modifiedDateTime)
-        );
-      default:
-        return files;
-    }
+    return sortAllFiles([...files], sortBy);
   }, [files, sortBy]);
 
   const handleOpenDialog = (fileItem) => {
@@ -73,7 +88,11 @@ export default function FileList() {
   const renderFileItems = () => {
     return sortedFiles.map((fileItem) => {
       return (
-        <FileListItem onOpenDialog={handleOpenDialog} fileItem={fileItem} />
+        <FileListItem
+          key={fileItem.path}
+          onOpenDialog={handleOpenDialog}
+          fileItem={fileItem}
+        />
       );
     });
   };

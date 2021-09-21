@@ -29,8 +29,8 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
   return (
     <Box
       sx={{
-        height: 180,
-        width: 320,
+        height: "100%",
+        width: "100%",
         position: "relative",
       }}
     >

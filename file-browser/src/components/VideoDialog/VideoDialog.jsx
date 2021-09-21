@@ -41,11 +41,13 @@ function VideoDialog({ onClose, fileItem, open }) {
       aria-labelledby="simple-dialog-title"
       open={open}
     >
-      <DialogTitle id="simple-dialog-title">{fileItem?.name}</DialogTitle>
+      <DialogTitle sx={{ fontSize: 16 }} id="simple-dialog-title">
+        {fileItem?.name}
+      </DialogTitle>
       <Box
         sx={{
-          height: 180,
-          width: 320,
+          height: 189,
+          width: 336,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",

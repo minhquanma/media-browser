@@ -17,6 +17,10 @@ import { formatFileSize } from "utils/format";
 const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
   const [isExpand, setExpand] = useState(false);
 
+  useEffect(() => {
+    setExpand(fileItem.status === "expanded");
+  }, []);
+
   const handleClick = () => {
     setExpand((value) => !value);
 
