@@ -1,8 +1,9 @@
 {
     "rootPaths": [
         { 
-            "name": "N550JV Downloads",
-            "path": "C:\\Users\\MMQ\\Downloads"
+            "name": "Tư liệu học tập",
+            "status": "hidden,expand,collapse",
+            "path": "D:\\Setup\\z53c82eba31f6d416f331de9162ebe997"
         }
     ],
     "excludedExtension": ["parts", "exe"]

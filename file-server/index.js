@@ -1,9 +1,4 @@
-import {
-  STATIC_PATH,
-  FILE_DIR,
-  SCREENSHOT_PATH,
-  SCREENSHOT_DIR,
-} from "./commons/const.js";
+import { SCREENSHOT_PATH, SCREENSHOT_DIR } from "./commons/const.js";
 
 import {
   getFileListApi,
@@ -27,7 +22,6 @@ app.use(
 );
 
 // Add static folder
-app.use(STATIC_PATH, express.static(FILE_DIR));
 app.use(SCREENSHOT_PATH, express.static(SCREENSHOT_DIR));
 
 app.get("/fileList", getFileListApi(app));

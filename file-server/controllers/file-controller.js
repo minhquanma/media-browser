@@ -1,20 +1,28 @@
-import { STATIC_PATH, FILE_DIR, SCREENSHOT_PATH } from "../commons/const.js";
+import { STATIC_PATH, SCREENSHOT_PATH } from "../commons/const.js";
 import { getFileListByRootPaths } from "../services/file-service.js";
 import { readConfig } from "../services/config-service.js";
-
 import { createScreenshots } from "../services/video-service.js";
+import express from "express";
+import md5 from "md5";
 
 export function makeGetFileListApi({ getFileListByRootPaths, readConfig }) {
   return (app) => (req, res) => {
-    const url = `${req.protocol}://${req.hostname}:${process.env.PORT}${STATIC_PATH}`;
     const { rootPaths, excludedExtension } = readConfig();
 
-    // Add path to express static
-    // paths.forEach((path) => {
-    //   app.use(path, express.static(path));
-    // });
+    // Generate & add path to express static
+    rootPaths.forEach((rootPath) => {
+      const dynamicPath = `${STATIC_PATH}/${md5(rootPath.path)}`;
 
-    const items = getFileListByRootPaths(url, rootPaths, excludedExtension);
+      app.use(dynamicPath, express.static(rootPath.path));
+    });
+
+    const requestedUrl = `${req.protocol}://${req.hostname}:${process.env.PORT}${STATIC_PATH}`;
+
+    const items = getFileListByRootPaths(
+      requestedUrl,
+      rootPaths,
+      excludedExtension
+    );
 
     res.send(items);
   };

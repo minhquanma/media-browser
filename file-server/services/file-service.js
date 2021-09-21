@@ -1,9 +1,17 @@
 import fs from "fs";
 import path from "path";
+import md5 from "md5";
 
-export const getFileListByRootPaths = (url, rootPaths, excludedExtension) => {
+export const getFileListByRootPaths = (
+  requestedUrl,
+  rootPaths,
+  excludedExtension
+) => {
   const items = rootPaths.map((rootPath) => {
     const stats = fs.statSync(rootPath.path);
+
+    // Generate path url using md5
+    const rootUrl = requestedUrl + "/" + md5(rootPath.path);
 
     // Root item
     return {
@@ -12,8 +20,8 @@ export const getFileListByRootPaths = (url, rootPaths, excludedExtension) => {
       name: rootPath.name,
       path: rootPath.path,
       modifiedDateTime: stats.mtime,
-      url: "",
-      children: getFileList(url, rootPath.path, excludedExtension),
+      url: null,
+      children: getFileList(rootUrl, rootPath.path, excludedExtension),
     };
   });
 
@@ -37,7 +45,7 @@ export const getFileList = (url, inputPath, excludedExtension) => {
 
       // If this path is a directory => drill down folder by calling itself recursively
       const children = stats.isDirectory()
-        ? getFileList(url + "/" + fileName, filePath)
+        ? getFileList(url + "/" + fileName, filePath, excludedExtension)
         : [];
 
       return [
