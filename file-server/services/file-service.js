@@ -8,22 +8,35 @@ export const getFileListByRootPaths = (
   excludedExtension
 ) => {
   const items = rootPaths.map((rootPath) => {
-    const stats = fs.statSync(rootPath.path);
+    try {
+      const stats = fs.statSync(rootPath.path);
 
-    // Generate path url using md5
-    const rootUrl = requestedUrl + "/" + md5(rootPath.path);
+      // Generate path url using md5
+      const rootUrl = requestedUrl + "/" + md5(rootPath.path);
 
-    // Root item
-    return {
-      isDirectory: true,
-      isRoot: true,
-      status: rootPath.status,
-      name: rootPath.name,
-      path: rootPath.path,
-      modifiedDateTime: stats.mtime,
-      url: null,
-      children: getFileList(rootUrl, rootPath.path, excludedExtension),
-    };
+      // Root item
+      return {
+        isDirectory: true,
+        isRoot: true,
+        status: rootPath.status,
+        name: rootPath.name,
+        path: rootPath.path,
+        modifiedDateTime: stats.mtime,
+        url: null,
+        children: getFileList(rootUrl, rootPath.path, excludedExtension),
+      };
+    } catch (statSyncErr) {
+      return {
+        isDirectory: true,
+        isRoot: true,
+        status: rootPath.status,
+        name: rootPath.name,
+        path: rootPath.path,
+        modifiedDateTime: null,
+        url: null,
+        children: [],
+      };
+    }
   });
 
   return items;

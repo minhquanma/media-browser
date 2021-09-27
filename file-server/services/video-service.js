@@ -1,3 +1,4 @@
+import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
 import { secondsToHours } from "../commons/time.js";
 import { SCREENSHOT_DIR } from "../commons/const.js";
@@ -53,13 +54,20 @@ export const createScreenshots = async ({
   for (const second of seconds) {
     const generateScreenshot = new Promise(async (resolve, reject) => {
       const imgFileName = `${fileName}_${second}.jpg`;
+      const output = `./${SCREENSHOT_DIR}/${imgFileName}`;
+
+      if (fs.existsSync(output)) {
+        resolve({
+          url: `${url}/${imgFileName}`,
+        });
+      }
 
       ffmpeg()
         .input(inputPath)
         .inputOptions([`-ss ${second}`])
         .outputOptions(["-vframes 1", "-q:v 6"])
         .noAudio()
-        .output(`./${SCREENSHOT_DIR}/${imgFileName}`)
+        .output(output)
         .on("end", () => {
           resolve({
             url: `${url}/${imgFileName}`,
