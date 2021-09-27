@@ -23,6 +23,15 @@ function sortAllFiles(files, sortBy) {
         (a, b) => new Date(a.modifiedDateTime) - new Date(b.modifiedDateTime)
       );
     default:
+      sortedFiles.sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
       break;
   }
 
@@ -34,6 +43,22 @@ function sortAllFiles(files, sortBy) {
 
   return sortedFiles;
 }
+
+// Temporary frontend search
+function searchAllFiles(files, searchKey) {
+  let searchResult = [];
+
+  searchResult = files.filter((file) => {
+    return file.name.toLowerCase().includes(searchKey.toLowerCase());
+  });
+
+  files.forEach((file) => {
+    searchResult.push(...searchAllFiles(file.children, searchKey));
+  });
+
+  return searchResult;
+}
+
 export default function FileList() {
   const [dialogData, setDialogData] = useState(null);
   const [isLoading, setLoading] = useState(false);
@@ -77,11 +102,7 @@ export default function FileList() {
     if (!searchKey) {
       setFiles(originalFiles.current);
     } else {
-      setFiles(
-        originalFiles.current.filter((file) =>
-          file.name.toLowerCase().includes(searchKey.toLowerCase())
-        )
-      );
+      setFiles(searchAllFiles(originalFiles.current, searchKey));
     }
   };
 

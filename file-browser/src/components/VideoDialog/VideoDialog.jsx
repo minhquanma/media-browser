@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import Skeleton from "@mui/material/Skeleton";
+import LinearProgress from "@mui/material/LinearProgress";
 import { Carousel } from "./Carousel";
 import { getVideoPreview } from "api/video.api";
 
@@ -46,15 +46,17 @@ function VideoDialog({ onClose, fileItem, open }) {
       </DialogTitle>
       <Box
         sx={{
-          height: 189,
-          width: 336,
+          height: "100%",
+          width: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
         {isLoading ? (
-          <Skeleton variant="rectangular" height="100%" width="100%" />
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
         ) : (
           <Carousel images={images} />
         )}
