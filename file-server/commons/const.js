@@ -4,6 +4,6 @@ export const STATIC_PATH = "/static";
 export const CONFIG_FILE = "config.json";
 export const ROOT_PATH_STATUS = {
   HIDDEN: "hidden",
-  COLLAPSE: "collapse",
-  EXPAND: "expand",
+  COLLAPSE: "collapsed",
+  EXPAND: "expanded",
 };

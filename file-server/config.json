@@ -1,8 +1,13 @@
 {
     "rootPaths": [
         { 
+            "name": "Anime",
+            "status": "collapsed",
+            "path": "D:\\_ANIME"
+        },
+        { 
             "name": "Tư liệu học tập",
-            "status": "hidden,expand,collapse",
+            "status": "expanded",
             "path": "D:\\Setup\\z53c82eba31f6d416f331de9162ebe997"
         }
     ],

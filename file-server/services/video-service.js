@@ -52,15 +52,17 @@ export const createScreenshots = async ({
 
   for (const second of seconds) {
     const generateScreenshot = new Promise(async (resolve, reject) => {
+      const imgFileName = `${fileName}_${second}.jpg`;
+
       ffmpeg()
         .input(inputPath)
         .inputOptions([`-ss ${second}`])
         .outputOptions(["-vframes 1", "-q:v 6"])
         .noAudio()
-        .output(`./${SCREENSHOT_DIR}/${fileName}_${second}.jpg`)
+        .output(`./${SCREENSHOT_DIR}/${imgFileName}`)
         .on("end", () => {
           resolve({
-            url: `${url}/${fileName}_${second}.jpg`,
+            url: `${url}/${imgFileName}`,
           });
         })
         .on("error", reject)
