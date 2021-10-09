@@ -1,0 +1,6 @@
+Sort by priority
+
+1. Add / Config path
+2. Setup Absolute path (using Babel)
+2. Delete files
+3. Upload files
