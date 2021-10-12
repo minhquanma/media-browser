@@ -1,2 +1,3 @@
-cd file-browser
-serve -s build
+cd app
+
+npm run start
