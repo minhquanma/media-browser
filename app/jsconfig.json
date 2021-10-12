@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "api/*": ["api/*"],
       "assets/*": ["assets/*"],
@@ -10,5 +10,5 @@
       "utils/*": ["utils/*"]
     }
   },
-  "include": ["."]
+  "include": ["./"]
 }
