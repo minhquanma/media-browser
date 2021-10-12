@@ -78,6 +78,7 @@ export function makeCreateScreenShots({
       const imgName = `${fileName}_${seeking}.jpg`;
       const outputPath = `./${SCREENSHOT_DIR}/${imgName}`;
 
+      // Don't generate screenshot if cache is exist
       if (fs.existsSync(outputPath)) {
         urlList.push({
           url: `${url}/${imgName}`,

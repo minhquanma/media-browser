@@ -1,4 +1,8 @@
-import { createSteps, createShotCount } from "./video-service.js";
+import {
+  createSteps,
+  createShotCount,
+  makeCreateScreenShots,
+} from "./video-service.js";
 
 describe("createSteps", () => {
   test("should return correct length", () => {
@@ -17,13 +21,6 @@ describe("createSteps", () => {
 });
 
 describe("createShotCount", () => {
-  // if (hours >= 4) {
-  //     shots = 25;
-  //   } else if (hours >= 3) {
-  //     shots = 20;
-  //   } else if (hours >= 2) {
-  //     shots = 15;
-  //   }
   test("hours >= 4, should return correct length", () => {
     const results = createShotCount(4);
     const expectedItems = 25;
@@ -47,5 +44,103 @@ describe("createShotCount", () => {
     const results = createShotCount(1);
     const expectedItems = 12;
     expect(results).toBe(expectedItems);
+  });
+});
+
+describe("createScreenshots", () => {
+  // Mock dependencies
+  const generateScreenshots = () => {
+    return Promise.resolve();
+  };
+
+  const getVideoInfo = () => {
+    return Promise.resolve({
+      size: 1024 * 1024,
+      durationInSeconds: 3600,
+    });
+  };
+
+  const secondsToHours = () => {
+    return {
+      remainder: 0,
+      hours: 1,
+    };
+  };
+
+  const createShotCount = (hours) => {
+    return 5;
+  };
+
+  const createSteps = (durationInSeconds, shots) => {
+    return [3, 5, 7, 9];
+  };
+
+  const createScreenshots = makeCreateScreenShots({
+    generateScreenshots,
+    getVideoInfo,
+    secondsToHours,
+    createShotCount,
+    createSteps,
+  });
+
+  test("should return correct length", async () => {
+    const results = await createScreenshots({
+      fileName: "video.mp4",
+      inputPath: "path/video.mp4",
+      url: "http://localhost:8080",
+    });
+    const expectedItems = 4;
+
+    expect(results.length).toBe(expectedItems);
+  });
+
+  test("should return correct data", async () => {
+    const results = await createScreenshots({
+      fileName: "video.mp4",
+      inputPath: "path/video.mp4",
+      url: "http://localhost:8080/ss",
+    });
+
+    const expectedItems = [
+      {
+        url: "http://localhost:8080/ss/video.mp4_3.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_5.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_7.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_9.jpg",
+      },
+    ];
+
+    expect(results).toStrictEqual(expectedItems);
+  });
+
+  test("error, should return correct data", async () => {
+    const results = await createScreenshots({
+      fileName: "video.mp4",
+      inputPath: "path/video.mp4",
+      url: "http://localhost:8080/ss",
+    });
+
+    const expectedItems = [
+      {
+        url: "http://localhost:8080/ss/video.mp4_3.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_5.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_7.jpg",
+      },
+      {
+        url: "http://localhost:8080/ss/video.mp4_9.jpg",
+      },
+    ];
+
+    expect(results).toStrictEqual(expectedItems);
   });
 });

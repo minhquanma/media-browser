@@ -1,15 +1,19 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
+import ffmpeg from "fluent-ffmpeg";
+ffmpeg.setFfmpegPath(process.env.FFMPEG_PATH);
+ffmpeg.setFfprobePath(process.env.FFPROBE_PATH);
+
 import { SCREENSHOT_PATH, SCREENSHOT_DIR } from "commons/const.js";
+
+import express from "express";
+import cors from "cors";
 
 import {
   getFileListApi,
   getVideoPreviewApi,
 } from "./controllers/file-controller.js";
-
-import * as dotenv from "dotenv";
-dotenv.config();
-
-import express from "express";
-import cors from "cors";
 
 const app = express();
 
