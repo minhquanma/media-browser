@@ -14,3 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.spacer {
+  padding: 6px 0px;
+}
