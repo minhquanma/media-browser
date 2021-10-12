@@ -1,17 +1,18 @@
 {
-  "type": "module",
   "name": "Workspace",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "build": "rm -rf dist && mkdir dist && babel src -d dist --copy-files",
+    "start": "node dist/index",
+    "test": "npm run build && jest dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -20,6 +21,11 @@
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "babel-plugin-module-resolver": "^4.1.0",
     "jest": "^27.2.2"
   }
 }

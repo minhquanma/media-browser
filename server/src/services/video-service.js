@@ -1,7 +1,7 @@
 import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
-import { secondsToHours } from "../commons/time.js";
-import { SCREENSHOT_DIR } from "../commons/const.js";
+import { secondsToHours } from "commons/time.js";
+import { SCREENSHOT_DIR } from "commons/const.js";
 
 const getVideoInfo = (inputPath) => {
   return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-import { SCREENSHOT_PATH, SCREENSHOT_DIR } from "./commons/const.js";
+import { SCREENSHOT_PATH, SCREENSHOT_DIR } from "commons/const.js";
 
 import {
   getFileListApi,

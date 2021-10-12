@@ -1,7 +1,7 @@
-import { STATIC_PATH, SCREENSHOT_PATH } from "../commons/const.js";
-import { getFileListByRootPaths } from "../services/file-service.js";
-import { readConfig } from "../services/config-service.js";
-import { createScreenshots } from "../services/video-service.js";
+import { STATIC_PATH, SCREENSHOT_PATH } from "commons/const.js";
+import { getFileListByRootPaths } from "services/file-service.js";
+import { readConfig } from "services/config-service.js";
+import { createScreenshots } from "services/video-service.js";
 import express from "express";
 import md5 from "md5";
 

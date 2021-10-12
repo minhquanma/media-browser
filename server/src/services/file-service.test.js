@@ -1,6 +1,7 @@
 import { getFileList, getFileListByRootPaths } from "./file-service.js";
 
-const folderName = process.cwd() + "\\services\\file-service.test";
+const folderName = process.cwd() + "\\src\\services\\file-service.test";
+
 const mockupRootPaths = [
   {
     name: "Test existing folder",
@@ -17,7 +18,7 @@ const mockupRootPaths = [
 describe("getFileList", () => {
   test("should return all items in test folder", () => {
     const results = getFileList("url", folderName, "");
-
+    console.log(folderName);
     const expectedItems = 4;
 
     expect(results.length).toBe(expectedItems);
