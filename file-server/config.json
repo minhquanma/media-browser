@@ -3,7 +3,7 @@
         { 
             "name": "Anime",
             "status": "collapsed",
-            "path": "D:\\_ANIME"
+            "path": "D:\\Media\\Anime"
         },
         { 
             "name": "Tư liệu học tập",
@@ -11,5 +11,5 @@
             "path": "D:\\Setup\\z53c82eba31f6d416f331de9162ebe997"
         }
     ],
-    "excludedExtension": ["parts", "exe"]
+    "excludedExtension": ["parts", "exe", "jpg", "png"]
 }

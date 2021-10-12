@@ -1,6 +1,11 @@
 Sort by priority
 
-1. Add / Config path
+1. Add / Config path (Frontend)
 2. Setup Absolute path (using Babel)
 2. Delete files
 3. Upload files
+
+Pages:
+/ (File browser home)
+/configs (Config app settings)
+/uploads (Manage uploads)

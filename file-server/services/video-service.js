@@ -3,13 +3,6 @@ import ffmpeg from "fluent-ffmpeg";
 import { secondsToHours } from "../commons/time.js";
 import { SCREENSHOT_DIR } from "../commons/const.js";
 
-const getRandomIntegerInRange = (min, max) => {
-  const minInt = Math.ceil(min);
-  const maxInt = Math.floor(max);
-
-  return Math.floor(Math.random() * (maxInt - minInt + 1) + minInt);
-};
-
 const getVideoInfo = (inputPath) => {
   return new Promise((resolve, reject) => {
     return ffmpeg.ffprobe(inputPath, (error, videoInfo) => {
@@ -27,63 +20,21 @@ const getVideoInfo = (inputPath) => {
   });
 };
 
-export const createScreenshots = async ({
-  fileName,
-  inputPath,
-  url,
-  shots = 10,
-}) => {
-  const { durationInSeconds } = await getVideoInfo(inputPath);
+async function generateScreenshots({ inputPath, outputPath, seeking }) {
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(inputPath)
+      .inputOptions([`-ss ${seeking}`])
+      .outputOptions(["-vframes 1", "-q:v 6"])
+      .noAudio()
+      .output(outputPath)
+      .on("end", resolve)
+      .on("error", reject)
+      .run();
+  });
+}
 
-  const { hours } = secondsToHours(durationInSeconds);
-
-  if (hours >= 4) {
-    shots = 25;
-  } else if (hours >= 3) {
-    shots = 20;
-  } else if (hours >= 2) {
-    shots = 15;
-  } else {
-    shots = 12;
-  }
-
-  const seconds = createSteps(durationInSeconds, shots);
-
-  const urlList = [];
-
-  for (const second of seconds) {
-    const generateScreenshot = new Promise(async (resolve, reject) => {
-      const imgFileName = `${fileName}_${second}.jpg`;
-      const output = `./${SCREENSHOT_DIR}/${imgFileName}`;
-
-      if (fs.existsSync(output)) {
-        resolve({
-          url: `${url}/${imgFileName}`,
-        });
-      }
-
-      ffmpeg()
-        .input(inputPath)
-        .inputOptions([`-ss ${second}`])
-        .outputOptions(["-vframes 1", "-q:v 6"])
-        .noAudio()
-        .output(output)
-        .on("end", () => {
-          resolve({
-            url: `${url}/${imgFileName}`,
-          });
-        })
-        .on("error", reject)
-        .run();
-    });
-
-    urlList.push(await generateScreenshot);
-  }
-
-  return urlList;
-};
-
-function createSteps(input, stepCount) {
+export function createSteps(input, stepCount) {
   const step = Math.round(input / stepCount);
   const steps = [];
 
@@ -92,3 +43,70 @@ function createSteps(input, stepCount) {
   }
   return steps;
 }
+
+export function createShotCount(hours) {
+  let shots = 12;
+
+  if (hours >= 4) {
+    shots = 25;
+  } else if (hours >= 3) {
+    shots = 20;
+  } else if (hours >= 2) {
+    shots = 15;
+  }
+
+  return shots;
+}
+
+export function makeCreateScreenShots({
+  generateScreenshots,
+  getVideoInfo,
+  secondsToHours,
+  createShotCount,
+  createSteps,
+}) {
+  return async function createScreenshots({ fileName, inputPath, url }) {
+    const { durationInSeconds } = await getVideoInfo(inputPath);
+    const { hours } = secondsToHours(durationInSeconds);
+
+    const shots = createShotCount(hours);
+    const seeks = createSteps(durationInSeconds, shots);
+
+    const urlList = [];
+
+    for (const seeking of seeks) {
+      const imgName = `${fileName}_${seeking}.jpg`;
+      const outputPath = `./${SCREENSHOT_DIR}/${imgName}`;
+
+      if (fs.existsSync(outputPath)) {
+        urlList.push({
+          url: `${url}/${imgName}`,
+        });
+      } else {
+        await generateScreenshots({
+          inputPath,
+          outputPath,
+          seeking,
+        }).catch(() => {
+          urlList.push({
+            url: null,
+          });
+        });
+
+        urlList.push({
+          url: `${url}/${imgName}`,
+        });
+      }
+    }
+
+    return urlList;
+  };
+}
+
+export const createScreenshots = makeCreateScreenShots({
+  generateScreenshots,
+  getVideoInfo,
+  secondsToHours,
+  createShotCount,
+  createSteps,
+});
