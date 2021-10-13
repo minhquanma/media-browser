@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import placeHolderImg from "assets/thumb_placeholder.png";
 import IconButton from "@mui/material/IconButton";
@@ -40,7 +41,7 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
           height: "inherit",
         }}
       >
-        <img style={{ height: "100%", width: "100%" }} src={imageUrl} />
+        <Image src={imageUrl} priority={true} width="1024" height="600" />
       </Box>
       <Box
         sx={{
@@ -55,7 +56,7 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
         <Box
           sx={{
             backgroundColor: "#fffffff0",
-            marginBottom: 1,
+            marginBottom: 2,
             borderRadius: 50,
             display: "flex",
             alignItems: "center",

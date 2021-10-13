@@ -15,6 +15,8 @@ import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import SearchBar from "components/SearchBar/SearchBar";
+import { Container } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -73,13 +75,13 @@ function AppLayout(props) {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
+            sx={{ mr: 1, display: { sm: "none" } }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Media browser
-          </Typography>
+          <Box sx={{ width: "100%" }}>
+            <SearchBar />
+          </Box>
         </Toolbar>
       </AppBar>
       <Box

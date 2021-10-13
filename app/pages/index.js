@@ -1,9 +1,7 @@
-import { useRouter } from "next/router";
-
 import { getFileList } from "api/file.api";
 import Container from "@mui/material/Container";
 import FileList from "components/FileList/FileList";
-import Header from "components/Header/Header";
+
 import { SORTS } from "constants/options";
 
 export async function getServerSideProps(context) {
@@ -83,39 +81,9 @@ function sortAllFiles(files, sortBy) {
   return sortedFiles;
 }
 
-export default function Home({ data, sortByQuery, searchQuery }) {
-  const router = useRouter();
-
-  const handleSortChange = (sortBy) => {
-    const query = {};
-
-    sortBy && (query.sortBy = sortBy);
-    searchQuery && (query.search = searchQuery);
-
-    router.replace({
-      query,
-    });
-  };
-
-  const handleSearch = (searchKey) => {
-    const query = {};
-
-    sortByQuery && (query.sortBy = sortByQuery);
-    searchKey && (query.search = searchKey);
-
-    router.replace({
-      query,
-    });
-  };
-
+export default function Home({ data }) {
   return (
     <Container maxWidth="md">
-      <Header
-        onSortChange={handleSortChange}
-        onSearch={handleSearch}
-        sortByQuery={sortByQuery}
-        searchQuery={searchQuery}
-      ></Header>
       <FileList files={data} />
     </Container>
   );
