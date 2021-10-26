@@ -5,9 +5,25 @@ import { ThemeProvider } from "@emotion/react";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Head from "next/head";
-import AppLayout from "components/AppLayout/AppLayout";
 
 const theme = {};
+
+function Auth({ children }) {
+  const { data: session, status } = useSession();
+  const isUser = !!session?.user;
+  React.useEffect(() => {
+    if (status === "loading") return; // Do nothing while loading
+    if (!isUser) signIn(); // If not authenticated, force log in
+  }, [isUser, status]);
+
+  if (isUser) {
+    return children;
+  }
+
+  // Session is being fetched, or no user.
+  // If no user, useEffect() will redirect.
+  return <div>Loading...</div>;
+}
 
 function MyApp({ Component, pageProps }) {
   const [isLoading, setLoading] = useState(false);
@@ -55,9 +71,7 @@ function MyApp({ Component, pageProps }) {
         >
           <CircularProgress color="inherit" />
         </Backdrop>
-        <AppLayout>
-          <Component {...pageProps} />
-        </AppLayout>
+        <Component {...pageProps} />
       </main>
     </ThemeProvider>
   );

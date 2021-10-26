@@ -85,7 +85,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
         />
         {fileItem.isDirectory && <ExpandIcon />}
       </ListItemButton>
-      <Collapse in={isExpand} timeout="auto" unmountOnExit>
+      <Collapse in={isExpand} timeout="2000" unmountOnExit>
         {renderChildren()}
       </Collapse>
     </>

@@ -1,24 +1,35 @@
 import { getFileList } from "api/file.api";
 import Container from "@mui/material/Container";
 import FileList from "components/FileList/FileList";
+import AppLayout from "components/AppLayout/AppLayout";
 
 import { SORTS } from "constants/options";
 
 export async function getServerSideProps(context) {
   const { search, sortBy } = context.query;
 
-  const files = await getFileList();
+  try {
+    const files = await getFileList();
 
-  const filteredFiles = searchAllFiles(files, search);
-  const sortedFiles = sortAllFiles(filteredFiles, sortBy);
+    const filteredFiles = searchAllFiles(files, search);
+    const sortedFiles = sortAllFiles(filteredFiles, sortBy);
 
-  return {
-    props: {
-      data: sortedFiles,
-      sortByQuery: sortBy ?? "",
-      searchQuery: search ?? "",
-    }, // will be passed to the page component as props
-  };
+    return {
+      props: {
+        data: sortedFiles,
+        sortByQuery: sortBy ?? "",
+        searchQuery: search ?? "",
+      }, // will be passed to the page component as props
+    };
+  } catch (apiErr) {
+    return {
+      props: {
+        data: [],
+        sortByQuery: "",
+        searchQuery: "",
+      },
+    };
+  }
 }
 
 function searchAllFiles(files, searchKey) {
@@ -83,8 +94,10 @@ function sortAllFiles(files, sortBy) {
 
 export default function Home({ data }) {
   return (
-    <Container maxWidth="md">
-      <FileList files={data} />
-    </Container>
+    <AppLayout>
+      <Container maxWidth="md">
+        <FileList files={data} />
+      </Container>
+    </AppLayout>
   );
 }
