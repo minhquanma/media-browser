@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, memo } from "react";
+import { useEffect, useState, useMemo, useRef, memo } from "react";
 
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
@@ -13,6 +13,45 @@ import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
 import { format } from "date-fns";
 import { formatFileSize } from "utils/format";
+import { useInfiniteScroll } from "utils/hooks";
+
+const ChildrenItems = ({ children, onOpenDialog, padding }) => {
+  const endRef = useRef();
+
+  const { list, isFullyLoaded } = useInfiniteScroll({
+    inputList: children,
+    endRef: endRef,
+    count: 10,
+  });
+
+  console.log(isFullyLoaded);
+
+  const renderChildren = () => {
+    return list.map((fileItemChild) => {
+      return (
+        <FileListItem
+          key={fileItemChild.path}
+          onOpenDialog={onOpenDialog}
+          fileItem={fileItemChild}
+          padding={2 + padding}
+        />
+      );
+    });
+  };
+
+  return (
+    <div>
+      {renderChildren()}
+      <div ref={endRef}>
+        {!isFullyLoaded && (
+          <ListItemButton sx={{ mb: 8 }}>
+            <ListItemText primary="Scroll to load more" />
+          </ListItemButton>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
   const [isExpand, setExpand] = useState(false);
@@ -30,18 +69,16 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
   };
 
   const renderChildren = () => {
-    if (fileItem.children.length) {
-      return fileItem.children.map((fileItemChild) => {
-        return (
-          <FileListItem
-            key={fileItemChild.path}
-            onOpenDialog={onOpenDialog}
-            fileItem={fileItemChild}
-            padding={2 + padding}
-          />
-        );
-      });
-    }
+    return list.map((fileItemChild) => {
+      return (
+        <FileListItem
+          key={fileItemChild.path}
+          onOpenDialog={onOpenDialog}
+          fileItem={fileItemChild}
+          padding={2 + padding}
+        />
+      );
+    });
   };
 
   const sizeInMB = useMemo(
@@ -85,8 +122,12 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
         />
         {fileItem.isDirectory && <ExpandIcon />}
       </ListItemButton>
-      <Collapse in={isExpand} timeout="2000" unmountOnExit>
-        {renderChildren()}
+      <Collapse in={isExpand} unmountOnExit>
+        <ChildrenItems
+          children={fileItem.children}
+          onOpenDialog={onOpenDialog}
+          padding={padding}
+        />
       </Collapse>
     </>
   );
