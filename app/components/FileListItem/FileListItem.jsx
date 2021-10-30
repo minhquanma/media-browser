@@ -15,16 +15,14 @@ import { format } from "date-fns";
 import { formatFileSize } from "utils/format";
 import { useInfiniteScroll } from "utils/hooks";
 
-const ChildrenItems = ({ children, onOpenDialog, padding }) => {
+const ChildrenItems = ({ items, onOpenDialog, padding }) => {
   const endRef = useRef();
 
   const { list, isFullyLoaded } = useInfiniteScroll({
-    inputList: children,
+    inputList: items,
     endRef: endRef,
     count: 10,
   });
-
-  console.log(isFullyLoaded);
 
   const renderChildren = () => {
     return list.map((fileItemChild) => {
@@ -124,7 +122,7 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
       </ListItemButton>
       <Collapse in={isExpand} unmountOnExit>
         <ChildrenItems
-          children={fileItem.children}
+          items={fileItem.children}
           onOpenDialog={onOpenDialog}
           padding={padding}
         />

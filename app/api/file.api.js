@@ -25,11 +25,16 @@ const MOCK_DATA = [
   },
 ];
 
-export async function getFileList() {
+export async function getFileList({ accessToken }) {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve(MOCK_DATA);
   //   }, 3000);
   // });
-  return await ApiService.get("/fileList");
+
+  return await ApiService.get("/fileList", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 }

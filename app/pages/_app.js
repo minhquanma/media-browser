@@ -1,7 +1,11 @@
 import "../styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "@emotion/react";
+import { Provider, useSession, signIn } from "next-auth/client";
+
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import Head from "next/head";
@@ -9,12 +13,13 @@ import Head from "next/head";
 const theme = {};
 
 function Auth({ children }) {
-  const { data: session, status } = useSession();
+  const [session, loading] = useSession();
+  const router = useRouter();
   const isUser = !!session?.user;
-  React.useEffect(() => {
-    if (status === "loading") return; // Do nothing while loading
-    if (!isUser) signIn(); // If not authenticated, force log in
-  }, [isUser, status]);
+  useEffect(() => {
+    if (loading) return; // Do nothing while loading
+    if (!isUser) router.replace("/auth/login"); // If not authenticated, log in
+  }, [isUser, loading]);
 
   if (isUser) {
     return children;
@@ -22,7 +27,7 @@ function Auth({ children }) {
 
   // Session is being fetched, or no user.
   // If no user, useEffect() will redirect.
-  return <div>Loading...</div>;
+  return <div>Authenticating...</div>;
 }
 
 function MyApp({ Component, pageProps }) {
@@ -49,33 +54,47 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Head>
-        <title>Media browser</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <meta name="theme-color" content="#000000" />
-        <link rel="icon" href="/favicon.ico" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-        />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        />
-      </Head>
-      <main>
-        <Backdrop
-          sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={isLoading}
-        >
-          <CircularProgress color="inherit" />
-        </Backdrop>
-        <Component {...pageProps} />
-      </main>
-    </ThemeProvider>
+    <Provider
+      session={pageProps.session}
+      options={{
+        clientMaxAge: 60 * 60 * 24 * 7, // Re-fetch session if cache is older than 7 days
+        keepAlive: 15 * 60, // Send keepAlive message every 15 minutes
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <Head>
+          <title>Media browser</title>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+          <meta name="theme-color" content="#000000" />
+          <link rel="icon" href="/favicon.ico" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
+        </Head>
+        <main>
+          <ToastContainer />
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={isLoading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          {Component.auth ? (
+            <Auth>
+              <Component {...pageProps} />
+            </Auth>
+          ) : (
+            <Component {...pageProps} />
+          )}
+        </main>
+      </ThemeProvider>
+    </Provider>
   );
-  return;
 }
 
 export default MyApp;

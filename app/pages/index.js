@@ -2,14 +2,16 @@ import { getFileList } from "api/file.api";
 import Container from "@mui/material/Container";
 import FileList from "components/FileList/FileList";
 import AppLayout from "components/AppLayout/AppLayout";
-
+import { getSession } from "next-auth/client";
 import { SORTS } from "constants/options";
 
 export async function getServerSideProps(context) {
   const { search, sortBy } = context.query;
 
   try {
-    const files = await getFileList();
+    const { accessToken } = await getSession(context);
+
+    const files = await getFileList({ accessToken });
 
     const filteredFiles = searchAllFiles(files, search);
     const sortedFiles = sortAllFiles(filteredFiles, sortBy);
@@ -92,7 +94,7 @@ function sortAllFiles(files, sortBy) {
   return sortedFiles;
 }
 
-export default function Home({ data }) {
+function Home({ data }) {
   return (
     <AppLayout>
       <Container maxWidth="md">
@@ -101,3 +103,7 @@ export default function Home({ data }) {
     </AppLayout>
   );
 }
+
+Home.auth = true;
+
+export default Home;

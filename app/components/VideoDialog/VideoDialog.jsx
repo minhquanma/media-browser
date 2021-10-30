@@ -7,10 +7,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Carousel } from "./Carousel";
 import { getVideoPreview } from "api/video.api";
+import { useSession } from "next-auth/client";
 
 function VideoDialog({ onClose, fileItem, open }) {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState([]);
+  const [session] = useSession();
 
   useEffect(() => {
     async function fetchVideoPreview() {
@@ -19,6 +21,7 @@ function VideoDialog({ onClose, fileItem, open }) {
         setImages([]);
 
         const data = await getVideoPreview({
+          accessToken: session.accessToken,
           inputPath: fileItem.path,
           fileName: fileItem.name,
         });

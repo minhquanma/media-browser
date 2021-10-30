@@ -7,12 +7,20 @@ const MOCK_VIDEO_PREVIEW = [
   { url: placeHolderImg },
 ];
 
-export async function getVideoPreview(params) {
+export async function getVideoPreview({ accessToken, inputPath, fileName }) {
   // return new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     resolve(MOCK_VIDEO_PREVIEW);
   //   }, 1000);
   // });
 
-  return await ApiService.post("/videoPreview", params);
+  return await ApiService.post(
+    "/videoPreview",
+    { inputPath, fileName },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 }
