@@ -7,3 +7,9 @@ export const ROOT_PATH_STATUS = {
   COLLAPSE: "collapsed",
   EXPAND: "expanded",
 };
+export const PASSPORT = {
+  SECRET: "_SECRET_",
+  REFRESH_SECRET: "_REFRESH_SECRET_",
+  TOKEN_EXPIRES: 60 * 15, // 15 minutes
+  REFRESH_TOKEN_EXPIRES: 60 * 60 * 24 * 21, // 21 days
+};
