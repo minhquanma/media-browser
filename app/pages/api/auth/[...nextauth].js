@@ -37,10 +37,10 @@ export default NextAuth({
   callbacks: {
     // Getting the JWT token from API response
     async jwt(token, auth) {
-      console.log(
-        `jwt is called ${new Date().getMinutes()}:${new Date().getSeconds()}`,
-        token
-      );
+      // console.log(
+      //   `jwt is called ${new Date().getMinutes()}:${new Date().getSeconds()}`,
+      //   token
+      // );
       if (auth) {
         token.username = auth.username;
         token.accessToken = auth.accessToken;
@@ -63,8 +63,6 @@ export default NextAuth({
       return token;
     },
     async session(session, auth) {
-      console.log("session is called", auth);
-
       if (isEmpty(auth)) {
         return {};
       }

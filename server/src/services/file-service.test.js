@@ -1,14 +1,21 @@
-import { getFileList, getFileListByRootPaths } from "./file-service.js";
+import {
+  getFileList,
+  getFileListByPaths,
+  getFileListByRootPaths,
+  getRootPathList,
+} from "./file-service.js";
 
 const folderName = process.cwd() + "\\src\\services\\file-service.test";
 
 const mockupRootPaths = [
   {
+    id: "111",
     name: "Test existing folder",
     status: "collapsed",
     path: folderName,
   },
   {
+    id: "222",
     name: "Test not existing folder",
     status: "collapsed",
     path: "Mr.Bean",
@@ -18,7 +25,7 @@ const mockupRootPaths = [
 describe("getFileList", () => {
   test("should return all items in test folder", () => {
     const results = getFileList("url", folderName, "");
-    console.log(folderName);
+
     const expectedItems = 4;
 
     expect(results.length).toBe(expectedItems);
@@ -77,4 +84,68 @@ describe("getFileListByRootPaths", () => {
 
     expect(results.length).toBe(expectedItems);
   });
+});
+
+describe("getFileListByPaths", () => {
+  test("should return all items in test folder", () => {
+    const results = getFileListByPaths({
+      url: "http://localhost",
+      rootId: "111",
+      rootPaths: mockupRootPaths,
+      paths: ["folder1"],
+      excludedExtension: [],
+    });
+
+    const expectedItems = 3;
+
+    expect(results.length).toBe(expectedItems);
+  });
+
+  test("should exclude items with ext: *.abc in test folder", () => {
+    const results = getFileListByPaths({
+      url: "http://localhost",
+      rootId: "111",
+      rootPaths: mockupRootPaths,
+      paths: ["folder1"],
+      excludedExtension: ["abc"],
+    });
+
+    const expectedItems = 2;
+
+    expect(results.length).toBe(expectedItems);
+  });
+
+  test("rootpath is empty, should return no items", () => {
+    const results = getFileList({
+      url: "http://localhost",
+      rootId: "111",
+      rootPaths: [],
+      paths: ["folder1"],
+      excludedExtension: [],
+    });
+
+    const expectedItems = 0;
+
+    expect(results.length).toBe(expectedItems);
+  });
+
+  test("path not exists, should return no items", () => {
+    const results = getFileList({
+      url: "http://localhost",
+      rootId: "111",
+      rootPaths: mockupRootPaths,
+      paths: ["hello"],
+      excludedExtension: [],
+    });
+
+    const expectedItems = 0;
+
+    expect(results.length).toBe(expectedItems);
+  });
+});
+
+describe("getRootPathList", () => {
+  const results = getRootPathList("http://localhost", mockupRootPaths);
+  console.log(results);
+  test("should return all items in test folder", () => {});
 });

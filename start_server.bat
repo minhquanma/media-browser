@@ -1,2 +1,2 @@
-cd file-server
-node index
+cd server
+npm run start

@@ -15,6 +15,8 @@ import cors from "cors";
 
 import {
   getFileListApi,
+  getFileListByPathApi,
+  getRootPathListApi,
   getVideoPreviewApi,
 } from "./controllers/file-controller.js";
 
@@ -34,15 +36,28 @@ app.use(
     extended: true,
   })
 );
+
+app.use(passport.initialize());
 // Add static folder
 app.use(SCREENSHOT_PATH, express.static(SCREENSHOT_DIR));
-app.use(passport.initialize());
 
 app.get(
   "/fileList",
   passport.authenticate("jwt", { session: false }),
   getFileListApi(app)
 );
+app.get(
+  "/fileListByPath",
+  passport.authenticate("jwt", { session: false }),
+  getFileListByPathApi(app)
+);
+
+app.get(
+  "/rootPathList",
+  passport.authenticate("jwt", { session: false }),
+  getRootPathListApi(app)
+);
+
 app.post("/videoPreview", getVideoPreviewApi);
 app.post("/login", loginValidation, loginApi);
 app.post("/refreshToken", refreshTokenApi);

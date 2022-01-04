@@ -19,13 +19,11 @@ function VideoDialog({ onClose, fileItem, open }) {
       if (open) {
         setIsLoading(true);
         setImages([]);
-
         const data = await getVideoPreview({
           accessToken: session.accessToken,
           inputPath: fileItem.path,
           fileName: fileItem.name,
         });
-
         setIsLoading(false);
         setImages(data);
       }
