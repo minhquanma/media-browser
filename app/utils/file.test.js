@@ -1,4 +1,5 @@
-import { formatFileSize } from "./format";
+// @ts-nocheck
+import { formatFileSize, sortAllFiles } from "./file";
 
 test("formatFileSize in KB", () => {
   const input = 1024;

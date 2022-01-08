@@ -1,106 +1,188 @@
-import { getFileList } from "api/file.api";
+import { getFileList, getFileListByPath } from "api/file.api";
+import { useState } from "react";
 import Container from "@mui/material/Container";
-import FileList from "components/FileList/FileList";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getSession } from "next-auth/client";
 import { SORTS } from "constants/options";
+import RootList from "components/RootList/RootList";
+import Typography from "@mui/material/Typography";
+import RootListItem from "components/RootList/RootListItem";
+import VideoDialog from "components/VideoDialog/VideoDialog";
+import { sortAllFiles } from "utils/file";
+import { isEmpty } from "lodash";
+
+// export async function getServerSideProps(context) {
+//   const { paths, search, sortBy } = context.query;
+
+//   console.log(new Date().toUTCString(), { paths });
+
+//   try {
+//     const { accessToken } = await getSession(context);
+
+//     const files = await getFileList({ accessToken });
+
+//     const filteredFiles = searchAllFiles(files, search);
+//     const sortedFiles = sortAllFiles(filteredFiles, sortBy);
+
+//     return {
+//       props: {
+//         data: sortedFiles,
+//         sortByQuery: sortBy ?? "",
+//         searchQuery: search ?? "",
+//       }, // will be passed to the page component as props
+//     };
+//   } catch (apiErr) {
+//     return {
+//       props: {
+//         data: [],
+//         sortByQuery: "",
+//         searchQuery: "",
+//       },
+//     };
+//   }
+// }
+
+// function searchAllFiles(files, searchKey) {
+//   if (!searchKey) {
+//     return files;
+//   }
+
+//   let searchResult = [];
+
+//   searchResult = files.filter((file) => {
+//     return file.name.toLowerCase().includes(searchKey.toLowerCase());
+//   });
+
+//   files.forEach((file) => {
+//     searchResult.push(...searchAllFiles(file.children, searchKey));
+//   });
+
+//   return searchResult;
+// }
+
+// function sortAllFiles(files, sortBy) {
+//   const sortedFiles = files;
+
+//   switch (sortBy) {
+//     case SORTS.ALPHABET:
+//       sortedFiles.sort((a, b) => {
+//         if (a.name < b.name) {
+//           return -1;
+//         }
+//         if (a.name > b.name) {
+//           return 1;
+//         }
+//         return 0;
+//       });
+//       break;
+//     case SORTS.DATE_ASC:
+//       sortedFiles.sort(
+//         (a, b) =>
+//           new Date(b.modifiedDateTime).getTime() -
+//           new Date(a.modifiedDateTime).getTime()
+//       );
+//       break;
+//     case SORTS.DATE_DESC:
+//       sortedFiles.sort(
+//         (a, b) =>
+//           new Date(a.modifiedDateTime).getTime() -
+//           new Date(b.modifiedDateTime).getTime()
+//       );
+//       break;
+//     default:
+//       // newest first
+//       sortedFiles.sort(
+//         (a, b) =>
+//           new Date(b.modifiedDateTime).getTime() -
+//           new Date(a.modifiedDateTime).getTime()
+//       );
+//       break;
+//   }
+
+//   sortedFiles.forEach((file) => {
+//     if (file.children) {
+//       sortAllFiles(file.children, sortBy);
+//     }
+//   });
+
+//   return sortedFiles;
+// }
+
+// function Home({ data }) {
+//   return (
+//     <AppLayout>
+//       <Container maxWidth="md">
+//         <FileList files={data} />
+//       </Container>
+//     </AppLayout>
+//   );
+// }
 
 export async function getServerSideProps(context) {
   const { paths, search, sortBy } = context.query;
 
-  console.log(paths);
   try {
     const { accessToken } = await getSession(context);
 
-    const files = await getFileList({ accessToken });
+    const [rootId, ...restPaths] = paths;
 
-    const filteredFiles = searchAllFiles(files, search);
-    const sortedFiles = sortAllFiles(filteredFiles, sortBy);
+    // Search for file if search query is passed
+    const isSearch = !!search;
+
+    const { name, data } = await getFileListByPath({
+      accessToken,
+      rootId: rootId,
+      paths: restPaths.join(","),
+      search,
+    });
+
+    const sortedFiles = sortAllFiles(data, sortBy);
 
     return {
-      props: {
-        data: sortedFiles,
-        sortByQuery: sortBy ?? "",
-        searchQuery: search ?? "",
-      }, // will be passed to the page component as props
+      props: { isSearch: isSearch, name: name, data: sortedFiles },
     };
   } catch (apiErr) {
     return {
-      props: {
-        data: [],
-        sortByQuery: "",
-        searchQuery: "",
-      },
+      props: { name: "Error", data: [] },
     };
   }
 }
 
-function searchAllFiles(files, searchKey) {
-  if (!searchKey) {
-    return files;
-  }
+function Home({ name, data, isSearch }) {
+  const [dialogData, setDialogData] = useState(null);
 
-  let searchResult = [];
+  const handleOpenDialog = (fileItem) => {
+    setDialogData(fileItem);
+  };
 
-  searchResult = files.filter((file) => {
-    return file.name.toLowerCase().includes(searchKey.toLowerCase());
-  });
+  const handleDialogClose = () => {
+    setDialogData(null);
+  };
 
-  files.forEach((file) => {
-    searchResult.push(...searchAllFiles(file.children, searchKey));
-  });
-
-  return searchResult;
-}
-
-function sortAllFiles(files, sortBy) {
-  const sortedFiles = files;
-
-  switch (sortBy) {
-    case SORTS.ALPHABET:
-      sortedFiles.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-      break;
-    case SORTS.DATE_ASC:
-      sortedFiles.sort(
-        (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
-      );
-      break;
-    case SORTS.DATE_DESC:
-      sortedFiles.sort(
-        (a, b) => new Date(a.modifiedDateTime) - new Date(b.modifiedDateTime)
-      );
-      break;
-    default:
-      // newest first
-      sortedFiles.sort(
-        (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
-      );
-      break;
-  }
-
-  sortedFiles.forEach((file) => {
-    if (file.children) {
-      sortAllFiles(file.children, sortBy);
-    }
-  });
-
-  return sortedFiles;
-}
-
-function Home({ data }) {
   return (
     <AppLayout>
-      <Container maxWidth="md">
-        <FileList files={data} />
+      <Container maxWidth="lg" sx={{ pt: 3 }}>
+        <Typography variant="h5" component="h5" sx={{ mb: 3 }}>
+          {isSearch ? `Search results in ${name}` : name}
+        </Typography>
+        <Typography variant="h6" component="h5">
+          {isEmpty(data) && "No files found"}
+        </Typography>
+        <RootList>
+          {data.map((item) => (
+            <RootListItem
+              key={item.pathOnDisk}
+              item={item}
+              onOpenDialog={handleOpenDialog}
+            ></RootListItem>
+          ))}
+        </RootList>
       </Container>
+      <VideoDialog
+        open={!!dialogData}
+        fileItem={dialogData}
+        onClose={handleDialogClose}
+      />
     </AppLayout>
   );
 }

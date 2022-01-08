@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
+    "checkJs": true,
+    "module": "commonjs",
+    "target": "es6",
+    "jsx": "react-jsx",
+    "baseUrl": ".",
     "paths": {
       "api/*": ["api/*"],
       "assets/*": ["assets/*"],
@@ -10,5 +14,6 @@
       "utils/*": ["utils/*"]
     }
   },
-  "include": ["./"]
+  "include": ["."],
+  "exclude": ["node_modules"]
 }

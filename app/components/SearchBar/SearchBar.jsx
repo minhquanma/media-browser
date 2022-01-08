@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SORT_OPTIONS, SORTS } from "constants/options";
 import Box from "@mui/material/Box";
@@ -15,15 +15,24 @@ import SortIcon from "@mui/icons-material/Sort";
 
 function SearchBar({}) {
   const router = useRouter();
-  const { sortBy: sortByQuery, search: searchQuery } = router.query;
+  const { paths, sortBy: sortByQuery, search: searchQuery } = router.query;
 
   const [sortBy, setSortBy] = useState(
     sortByQuery ? sortByQuery : SORTS.DATE_ASC
   );
+
   const [searchKey, setSearchKey] = useState(searchQuery);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+
+  useEffect(() => {
+    if (searchQuery) {
+      setSearchKey(searchQuery);
+    } else {
+      setSearchKey("");
+    }
+  }, [searchQuery]);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,7 +47,10 @@ function SearchBar({}) {
     value && (query.sortBy = value);
     searchQuery && (query.search = searchQuery);
 
-    router.replace({
+    router.push({
+      // @ts-ignore
+      pathname: paths ? paths.join("/") : "",
+      // @ts-ignore
       query,
     });
   }
@@ -49,12 +61,16 @@ function SearchBar({}) {
     sortByQuery && (query.sortBy = sortByQuery);
     value && (query.search = value);
 
-    router.replace({
+    router.push({
+      // @ts-ignore
+      pathname: paths ? paths.join("/") : "",
+      // @ts-ignore
       query,
     });
   }
 
   function handleSortChange(value) {
+    // @ts-ignore
     return (e) => {
       setSortBy(value);
       sort(value);
@@ -100,6 +116,7 @@ function SearchBar({}) {
           inputProps={{
             "aria-label": "search files",
             value: searchKey,
+            // @ts-ignore
             onChange: handleSearchChange,
             onKeyPress: handleSearchKeyPress,
           }}

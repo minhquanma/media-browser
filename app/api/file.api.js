@@ -38,3 +38,26 @@ export async function getFileList({ accessToken }) {
     },
   });
 }
+
+export async function getRootPathList({ accessToken, search = "" }) {
+  return await ApiService.get("/rootPathList", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: { search },
+  });
+}
+
+export async function getFileListByPath({
+  accessToken,
+  rootId,
+  paths,
+  search,
+}) {
+  return await ApiService.get("/fileList/" + rootId, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    params: { paths, search },
+  });
+}

@@ -21,7 +21,7 @@ function VideoDialog({ onClose, fileItem, open }) {
         setImages([]);
         const data = await getVideoPreview({
           accessToken: session.accessToken,
-          inputPath: fileItem.path,
+          inputPath: fileItem.pathOnDisk,
           fileName: fileItem.name,
         });
         setIsLoading(false);

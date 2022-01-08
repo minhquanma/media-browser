@@ -11,18 +11,20 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import HomeIcon from "@mui/icons-material/Home";
 import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import SearchBar from "components/SearchBar/SearchBar";
-import { Container } from "@mui/material";
-import { session, signOut, useSession } from "next-auth/client";
+import { signOut, useSession } from "next-auth/client";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 
 function AppLayout(props) {
   const { window, children } = props;
+  const router = useRouter();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [session] = useSession();
 
@@ -36,6 +38,19 @@ function AppLayout(props) {
       <Toolbar>
         <Typography>Logged in as: {session.username}</Typography>
       </Toolbar>
+      <List>
+        <ListItem
+          button
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Home"} />
+        </ListItem>
+      </List>
       <Divider />
       <List>
         <ListItem button>

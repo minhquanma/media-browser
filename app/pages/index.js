@@ -1,9 +1,15 @@
-import { getFileList } from "api/file.api";
+import { useState } from "react";
+import { getFileList, getRootPathList } from "api/file.api";
 import Container from "@mui/material/Container";
-import FileList from "components/FileList/FileList";
+import Typography from "@mui/material/Typography";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getSession } from "next-auth/client";
-import { SORTS } from "constants/options";
+
+import RootList from "components/RootList/RootList";
+import RootListItem from "components/RootList/RootListItem";
+import VideoDialog from "components/VideoDialog/VideoDialog";
+import { isEmpty } from "lodash";
+import { sortAllFiles } from "utils/file";
 
 export async function getServerSideProps(context) {
   const { search, sortBy } = context.query;
@@ -11,95 +17,60 @@ export async function getServerSideProps(context) {
   try {
     const { accessToken } = await getSession(context);
 
-    const files = await getFileList({ accessToken });
-
-    const filteredFiles = searchAllFiles(files, search);
-    const sortedFiles = sortAllFiles(filteredFiles, sortBy);
+    // Search for file if search query is passed
+    const isSearch = !!search;
+    const files = await getRootPathList({ accessToken, search });
+    const sortedFiles = sortAllFiles(files, sortBy);
 
     return {
       props: {
+        isSearch: isSearch,
         data: sortedFiles,
-        sortByQuery: sortBy ?? "",
-        searchQuery: search ?? "",
       }, // will be passed to the page component as props
     };
   } catch (apiErr) {
     return {
       props: {
         data: [],
-        sortByQuery: "",
-        searchQuery: "",
       },
     };
   }
 }
 
-function searchAllFiles(files, searchKey) {
-  if (!searchKey) {
-    return files;
-  }
+function Home({ data, isSearch }) {
+  const [dialogData, setDialogData] = useState(null);
 
-  let searchResult = [];
+  const handleOpenDialog = (fileItem) => {
+    setDialogData(fileItem);
+  };
 
-  searchResult = files.filter((file) => {
-    return file.name.toLowerCase().includes(searchKey.toLowerCase());
-  });
-
-  files.forEach((file) => {
-    searchResult.push(...searchAllFiles(file.children, searchKey));
-  });
-
-  return searchResult;
-}
-
-function sortAllFiles(files, sortBy) {
-  const sortedFiles = files;
-
-  switch (sortBy) {
-    case SORTS.ALPHABET:
-      sortedFiles.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        }
-        if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
-      break;
-    case SORTS.DATE_ASC:
-      sortedFiles.sort(
-        (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
-      );
-      break;
-    case SORTS.DATE_DESC:
-      sortedFiles.sort(
-        (a, b) => new Date(a.modifiedDateTime) - new Date(b.modifiedDateTime)
-      );
-      break;
-    default:
-      // newest first
-      sortedFiles.sort(
-        (a, b) => new Date(b.modifiedDateTime) - new Date(a.modifiedDateTime)
-      );
-      break;
-  }
-
-  sortedFiles.forEach((file) => {
-    if (file.children) {
-      sortAllFiles(file.children, sortBy);
-    }
-  });
-
-  return sortedFiles;
-}
-
-function Home({ data }) {
+  const handleDialogClose = () => {
+    setDialogData(null);
+  };
   return (
     <AppLayout>
-      <Container maxWidth="md">
-        <FileList files={data} />
+      <Container maxWidth="lg" sx={{ pt: 3 }}>
+        <Typography variant="h4" component="h4" sx={{ mb: 3 }}>
+          {isSearch ? "Search results" : "Root directories"}
+        </Typography>
+        <Typography variant="h5">
+          {isEmpty(data) && "No files found"}
+        </Typography>
+        <RootList>
+          {data.map((item) => (
+            <RootListItem
+              key={item.pathOnDisk}
+              item={item}
+              onOpenDialog={handleOpenDialog}
+            ></RootListItem>
+          ))}
+        </RootList>
       </Container>
+      <VideoDialog
+        open={!!dialogData}
+        fileItem={dialogData}
+        onClose={handleDialogClose}
+      />
     </AppLayout>
   );
 }

@@ -12,7 +12,7 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 
 import { format } from "date-fns";
-import { formatFileSize } from "utils/format";
+import { formatFileSize } from "utils/file";
 import { useInfiniteScroll } from "utils/hooks";
 
 const ChildrenItems = ({ items, onOpenDialog, padding }) => {
