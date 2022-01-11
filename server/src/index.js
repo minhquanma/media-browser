@@ -47,7 +47,7 @@ app.get(
   getFileListApi(app)
 );
 app.get(
-  "/fileListByPath",
+  "/fileList/:id",
   passport.authenticate("jwt", { session: false }),
   getFileListByPathApi(app)
 );

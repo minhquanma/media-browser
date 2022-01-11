@@ -1,14 +1,20 @@
 {
     "rootPaths": [
         { 
-            "id": "4b514a016d59553f87be0c4412a1f521",
+            "id": "root-id-muon-dat-gi-ma-cha-duoc",
+            "name": "JPOP好き",
+            "status": "collapsed",
+            "path": "D:\\_JPOPSUKI"
+        },
+        { 
+            "id": "mien-sao-khong-trung",
             "name": "Media",
             "status": "collapsed",
             "path": "D:\\Media"
         },
         { 
             "id": "fc0ab1fc97327163199d384eb23ffb2e",
-            "name": "Tư liệu học tập",
+            "name": "Test tên root path dài 6 cây số coi có bị bể layout hay không",
             "status": "expanded",
             "path": "D:\\Setup\\z53c82eba31f6d416f331de9162ebe997"
         }

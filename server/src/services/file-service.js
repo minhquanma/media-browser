@@ -2,11 +2,11 @@ import fs from "fs";
 import path from "path";
 import md5 from "md5";
 
-export const getFileListByRootPaths = (
+export const getFileListByRootPaths = ({
   requestedUrl,
   rootPaths,
-  excludedExtension
-) => {
+  excludedExtension,
+}) => {
   const items = rootPaths.map((rootPath) => {
     try {
       const stats = fs.statSync(rootPath.path);
@@ -41,7 +41,6 @@ export const getFileListByRootPaths = (
 
   return items;
 };
-
 export const getFileList = (url, inputPath, excludedExtension) => {
   try {
     const files = fs.readdirSync(inputPath);
@@ -88,23 +87,24 @@ export const getFileList = (url, inputPath, excludedExtension) => {
   }
 };
 
+export const createRoutePath = ({ rootId, paths, fileName }) => {
+  const joinedQueryPath = paths?.join("/");
+
+  return joinedQueryPath
+    ? `${rootId}/${joinedQueryPath}/${fileName}`
+    : `${rootId}/${fileName}`;
+};
+
 export const getFileListByPaths = ({
   url,
   rootId,
-  rootPaths,
-  paths,
+  rootPath,
+  paths = [],
   excludedExtension,
 }) => {
+  const inputPath = `${rootPath}\\${paths.join("\\")}`;
+
   try {
-    // Get root path from root id
-    const rootPath = rootPaths.find((path) => path.id === rootId);
-
-    if (!rootPath) {
-      return [];
-    }
-
-    const inputPath = `${rootPath.path}\\${paths.join("\\")}`;
-
     const files = fs.readdirSync(inputPath);
 
     const fileList = files.flatMap((fileName) => {
@@ -122,11 +122,18 @@ export const getFileListByPaths = ({
           return [];
         }
 
+        const routePath = createRoutePath({
+          rootId,
+          paths,
+          fileName,
+        });
+
         return [
           {
             isDirectory: stats.isDirectory(),
-            url: `${url}/${rootId}/${paths.join("/")}/${fileName}`,
-            path: filePath,
+            url: `${url}/${routePath}`,
+            path: `/${routePath}`,
+            pathOnDisk: filePath,
             name: fileName,
             size: stats.size,
             modifiedDateTime: stats.mtime,
@@ -143,7 +150,7 @@ export const getFileListByPaths = ({
   }
 };
 
-export const getRootPathList = (requestedUrl, rootPaths) => {
+export const getRootPathList = (requestedUrl, rootPaths = []) => {
   const items = rootPaths.map((rootPath) => {
     try {
       // Read all files in path
@@ -153,19 +160,21 @@ export const getRootPathList = (requestedUrl, rootPaths) => {
       return {
         isDirectory: true,
         isRoot: true,
-        status: rootPath.status,
+        size: stats.size,
         name: rootPath.name,
-        path: rootPath.path,
+        path: rootPath.id,
+        pathOnDisk: rootPath.path,
         modifiedDateTime: stats.mtime,
-        url: `${requestedUrl}/${rootPath.id}`,
+        url: null,
       };
     } catch (statSyncErr) {
       return {
         isDirectory: true,
         isRoot: true,
-        status: rootPath.status,
+        size: 0,
         name: "(directory not found) " + rootPath.name,
         path: "",
+        pathOnDisk: "",
         modifiedDateTime: null,
         url: null,
       };
@@ -173,4 +182,99 @@ export const getRootPathList = (requestedUrl, rootPaths) => {
   });
 
   return items;
+};
+
+export const searchFileListByPaths = ({
+  url,
+  rootId,
+  rootPath,
+  paths,
+  excludedExtension = [],
+  search = "",
+}) => {
+  const searchResults = [];
+  const inputPath = paths ? `${rootPath}\\${paths.join("\\")}` : rootPath;
+
+  console.log(url);
+  try {
+    const files = fs.readdirSync(inputPath);
+
+    for (const fileName of files) {
+      const filePath = path.join(inputPath, fileName);
+
+      // Getting information for a dir
+      try {
+        const stats = fs.statSync(filePath);
+
+        // If this path is a directory => drill down folder by calling itself recursively
+        if (stats.isDirectory()) {
+          searchResults.push(
+            ...searchFileListByPaths({
+              url,
+              rootId,
+              rootPath,
+              paths: [...paths, fileName],
+              excludedExtension,
+              search,
+            })
+          );
+        }
+
+        // Skip if file name is in excluding list
+        if (excludedExtension.includes(fileName.split(".").pop())) {
+          continue;
+        }
+
+        // Skip if not meet search criteria
+        if (!fileName.toLowerCase().includes(search.toLowerCase())) {
+          continue;
+        }
+
+        const routePath = createRoutePath({
+          rootId,
+          paths,
+          fileName,
+        });
+
+        searchResults.push({
+          isDirectory: stats.isDirectory(),
+          url: `${url}/${routePath}`,
+          path: `/${routePath}`,
+          pathOnDisk: filePath,
+          name: fileName,
+          size: stats.size,
+          modifiedDateTime: stats.mtime,
+        });
+      } catch (statSyncErr) {
+        continue;
+      }
+    }
+
+    return searchResults;
+  } catch (readDirError) {
+    return [];
+  }
+};
+
+export const searchAllRootFiles = ({
+  url,
+  rootPaths,
+  excludedExtension,
+  search,
+}) => {
+  const results = rootPaths.reduce((previousValue, currentValue) => {
+    previousValue.push(
+      ...searchFileListByPaths({
+        url,
+        rootId: currentValue.id,
+        rootPath: currentValue.path,
+        paths: [],
+        excludedExtension,
+        search,
+      })
+    );
+    return previousValue;
+  }, []);
+
+  return results;
 };
