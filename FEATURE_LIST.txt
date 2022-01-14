@@ -1,11 +1,29 @@
-Sort by priority
+--------------------------------
+Pending features, sort by priority
+--------------------------------
 
-1. Add / Config path (Frontend)
-2. Setup Absolute path (using Babel)
-2. Delete files
-3. Upload files
+Config page:
+- Add/edit excluded file extentions.
+- Option to automatically/manually remove video thumbnail cache.
+- Option to disable video thumbnail when open dialog.
 
-Pages:
-/ (File browser home)
-/configs (Config app settings)
-/uploads (Manage uploads)
+VideoDialog (consider renaming to PreviewDialog):
+- Add support for image files 
+- Add support for music files, (consider creating a MusicPlayer component)
+
+Upload page:
+- As an admin I can upload files to server.
+- View Uploaded files list, admin has option to remove uploaded files.
+- Show preview for media files (music/video/image).
+
+
+--------------------------
+Todo implementations:
+--------------------------
+
+Change express static file 
+express.static => res.sendFile
+
+Apply Breadcrums
+https://mui.com/components/breadcrumbs/#main-content
+
