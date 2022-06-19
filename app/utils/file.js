@@ -32,9 +32,16 @@ export const sortAllFiles = (files, sortBy) => {
           new Date(b.modifiedDateTime).getTime()
       );
       break;
-    default:
-      // newest first
+    case SORTS.ALPHABET:
       sortedFiles.sort((a, b) => a.name > b.name);
+      break;
+    default:
+      // default sorting is newest first
+      sortedFiles.sort(
+        (a, b) =>
+          new Date(b.modifiedDateTime).getTime() -
+          new Date(a.modifiedDateTime).getTime()
+      );
       break;
   }
 

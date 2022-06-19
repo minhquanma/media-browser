@@ -8,6 +8,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { Carousel } from "./Carousel";
 import { getVideoPreview } from "api/video.api";
 import { useSession } from "next-auth/client";
+import { VIDEO_TYPES } from "constants/files";
 
 function VideoDialog({ onClose, fileItem, open }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +17,7 @@ function VideoDialog({ onClose, fileItem, open }) {
 
   useEffect(() => {
     async function fetchVideoPreview() {
-      if (open) {
+      if (open && VIDEO_TYPES.includes(fileItem.name.split(".").pop())) {
         setIsLoading(true);
         setImages([]);
         const data = await getVideoPreview({

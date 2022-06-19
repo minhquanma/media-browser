@@ -28,7 +28,6 @@ function AppLayout(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [session] = useSession();
 
-  console.log(session);
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };

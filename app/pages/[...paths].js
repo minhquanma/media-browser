@@ -10,7 +10,9 @@ import RootListItem from "components/RootList/RootListItem";
 import VideoDialog from "components/VideoDialog/VideoDialog";
 import { sortAllFiles } from "utils/file";
 import { isEmpty } from "lodash";
-
+import { IconButton, Box } from "@mui/material";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { useRouter } from "next/router";
 // export async function getServerSideProps(context) {
 //   const { paths, search, sortBy } = context.query;
 
@@ -149,6 +151,7 @@ export async function getServerSideProps(context) {
 }
 
 function Home({ name, data, isSearch }) {
+  const router = useRouter();
   const [dialogData, setDialogData] = useState(null);
 
   const handleOpenDialog = (fileItem) => {
@@ -159,12 +162,21 @@ function Home({ name, data, isSearch }) {
     setDialogData(null);
   };
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <AppLayout>
-      <Container maxWidth="lg" sx={{ pt: 3 }}>
-        <Typography variant="h5" component="h5" sx={{ mb: 3 }}>
-          {isSearch ? `Search results in ${name}` : name}
-        </Typography>
+      <Container maxWidth="lg" sx={{ pt: 2 }}>
+        <Box sx={{ mb: 1, display: "flex", alignItems: "center" }}>
+          <IconButton aria-label="delete" onClick={handleBack}>
+            <ArrowBackIosNewIcon color="primary" />
+          </IconButton>
+          <Typography variant="h5" component="h5">
+            {isSearch ? `Search results in ${name}` : name}
+          </Typography>
+        </Box>
         <Typography variant="h6" component="h5">
           {isEmpty(data) && "No files found"}
         </Typography>

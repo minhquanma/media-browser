@@ -66,19 +66,6 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
     }
   };
 
-  const renderChildren = () => {
-    return list.map((fileItemChild) => {
-      return (
-        <FileListItem
-          key={fileItemChild.path}
-          onOpenDialog={onOpenDialog}
-          fileItem={fileItemChild}
-          padding={2 + padding}
-        />
-      );
-    });
-  };
-
   const sizeInMB = useMemo(
     () => (fileItem.isDirectory ? `` : formatFileSize(fileItem.size)),
     [fileItem.size]
@@ -89,18 +76,16 @@ const FileListItem = ({ onOpenDialog, fileItem, padding = 0 }) => {
     " hh:mm - MM/dd/yy"
   )}`;
 
-  const style = useMemo(
-    () => ({
-      pl: 1 + padding,
-    }),
-    [padding]
-  );
-
   const ExpandIcon = isExpand ? ExpandLess : ExpandMore;
 
   return (
     <>
-      <ListItemButton onClick={handleClick} sx={style}>
+      <ListItemButton
+        onClick={handleClick}
+        sx={{
+          pl: 1 + padding,
+        }}
+      >
         <ListItemAvatar>
           <Avatar>
             {fileItem.isDirectory ? (

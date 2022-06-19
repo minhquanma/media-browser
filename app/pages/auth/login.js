@@ -26,7 +26,7 @@ const Login = () => {
     } else {
       toast.error("Login failed");
     }
-    console.log(result);
+    console.log("Login error", result);
   };
   return (
     <Container maxWidth="sm" sx={{ p: 3 }}>

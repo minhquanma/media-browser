@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
-    "checkJs": true,
+    "checkJs": false,
     "module": "commonjs",
     "target": "es6",
     "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
-      "api/*": ["api/*"],
-      "assets/*": ["assets/*"],
-      "components/*": ["components/*"],
-      "constants/*": ["constants/*"],
-      "services/*": ["services/*"],
-      "utils/*": ["utils/*"]
+      "~/*": ["./*"],
+      "@/*": ["./*"],
+      "~~/*": ["./*"],
+      "@@/*": ["./*"]
     }
   },
   "include": ["."],

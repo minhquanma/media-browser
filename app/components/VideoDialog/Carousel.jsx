@@ -41,7 +41,7 @@ export function Carousel({ images = [{ url: placeHolderImg }] }) {
           height: "inherit",
         }}
       >
-        <Image src={imageUrl} priority={true} width="1024" height="600" />
+        <Image src={imageUrl} priority={true} width="1024" height="600" alt="video-image" />
       </Box>
       <Box
         sx={{
