@@ -2,7 +2,7 @@ import axios from "axios";
 import { getSession, signOut } from "next-auth/client";
 
 const axiosInstance = axios.create({
-  baseURL: `http://mmq.onthewifi.com:81`,
+  baseURL: "http://mmq.onthewifi.com:81",
 });
 
 axiosInstance.interceptors.request.use(

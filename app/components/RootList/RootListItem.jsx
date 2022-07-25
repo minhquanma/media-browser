@@ -11,7 +11,7 @@ export default function RootListItem({ item, onOpenDialog = (item) => {} }) {
   let ItemIcon = InsertDriveFileIcon;
   let itemBackground = ITEM_COLOR.FILE.background;
   let itemColor = ITEM_COLOR.FILE.color;
-  let itemComponent = "";
+  let itemComponent = "div";
   let itemHref = "";
 
   if (item.isDirectory) {

@@ -1,9 +1,8 @@
 import { getFileList, getFileListByPath } from "api/file.api";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Container from "@mui/material/Container";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getSession } from "next-auth/client";
-import { SORTS } from "constants/options";
 import RootList from "components/RootList/RootList";
 import Typography from "@mui/material/Typography";
 import RootListItem from "components/RootList/RootListItem";
@@ -13,6 +12,7 @@ import { isEmpty } from "lodash";
 import { IconButton, Box } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useRouter } from "next/router";
+
 // export async function getServerSideProps(context) {
 //   const { paths, search, sortBy } = context.query;
 
@@ -131,6 +131,7 @@ export async function getServerSideProps(context) {
     // Search for file if search query is passed
     const isSearch = !!search;
 
+    // @ts-ignore
     const { name, data } = await getFileListByPath({
       accessToken,
       rootId: rootId,
@@ -168,8 +169,8 @@ function Home({ name, data, isSearch }) {
 
   return (
     <AppLayout>
-      <Container maxWidth="lg" sx={{ pt: 2 }}>
-        <Box sx={{ mb: 1, display: "flex", alignItems: "center" }}>
+      <Container maxWidth="lg" sx={{ pt: 3 }}>
+        <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 1 }}>
           <IconButton aria-label="delete" onClick={handleBack}>
             <ArrowBackIosNewIcon color="primary" />
           </IconButton>
