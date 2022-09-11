@@ -1,3 +1,9 @@
+--------------------------
+Todo implementations:
+--------------------------
+Fix loading generating thumbs bugs:
+=> add error code to API when ffmpeg can't generate images.
+
 --------------------------------
 Pending features, sort by priority
 --------------------------------
@@ -24,6 +30,5 @@ Todo implementations:
 Change express static file 
 express.static => res.sendFile
 
-Apply Breadcrums
-https://mui.com/components/breadcrumbs/#main-content
+
 

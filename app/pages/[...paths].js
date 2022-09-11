@@ -3,7 +3,6 @@ import { useState, useRef } from "react";
 import Container from "@mui/material/Container";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getSession } from "next-auth/client";
-import RootList from "components/RootList/RootList";
 import Typography from "@mui/material/Typography";
 import RootListItem from "components/RootList/RootListItem";
 import VideoDialog from "components/VideoDialog/VideoDialog";
@@ -181,7 +180,7 @@ function Home({ name, data, isSearch }) {
         <Typography variant="h6" component="h5">
           {isEmpty(data) && "No files found"}
         </Typography>
-        <RootList>
+        <Box>
           {data.map((item) => (
             <RootListItem
               key={item.pathOnDisk}
@@ -189,7 +188,7 @@ function Home({ name, data, isSearch }) {
               onOpenDialog={handleOpenDialog}
             ></RootListItem>
           ))}
-        </RootList>
+        </Box>
       </Container>
       <VideoDialog
         open={!!dialogData}

@@ -1,0 +1,6 @@
+{
+  "user": { "name": "Admin Test" },
+  "username": "Test",
+  "expires": "2050-01-01T00:00:00.000Z",
+  "accessToken": "abcdefghijklmnopqrst"
+}

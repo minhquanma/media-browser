@@ -6,19 +6,18 @@ import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { format } from "date-fns";
 import { ITEM_COLOR } from "constants/styles";
 import { formatFileSize } from "utils/file";
+import AppListItemButton from "../AppListItemButton/AppListItemButton";
 
 export default function RootListItem({ item, onOpenDialog = (item) => {} }) {
   let ItemIcon = InsertDriveFileIcon;
   let itemBackground = ITEM_COLOR.FILE.background;
   let itemColor = ITEM_COLOR.FILE.color;
-  let itemComponent = "div";
   let itemHref = "";
 
   if (item.isDirectory) {
     ItemIcon = FolderOpenIcon;
     itemBackground = ITEM_COLOR.FOLDER.background;
     itemColor = ITEM_COLOR.FOLDER.color;
-    itemComponent = "a";
     itemHref = item.path;
   }
 
@@ -28,19 +27,9 @@ export default function RootListItem({ item, onOpenDialog = (item) => {} }) {
   };
 
   return (
-    <ListItemButton
-      sx={{
-        width: "100%",
-        listStyleType: "none",
-        padding: "12px",
-        border: "2px solid #F0F0F0",
-        borderRadius: "10px",
-        marginBottom: "12px",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-      component={itemComponent}
+    <AppListItemButton
       href={itemHref}
+      isUrl={item.isDirectory}
       onClick={handleListItemClick}
     >
       {/* icon */}
@@ -78,6 +67,6 @@ export default function RootListItem({ item, onOpenDialog = (item) => {} }) {
           />
         )}
       </Box>
-    </ListItemButton>
+    </AppListItemButton>
   );
 }

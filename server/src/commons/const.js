@@ -10,6 +10,6 @@ export const ROOT_PATH_STATUS = {
 export const PASSPORT = {
   SECRET: "_SECRET_",
   REFRESH_SECRET: "_REFRESH_SECRET_",
-  TOKEN_EXPIRES: 60 * 15, // 15 minutes
-  REFRESH_TOKEN_EXPIRES: 60 * 60 * 24 * 21, // 21 days
+  TOKEN_EXPIRES: 60 * 20, // 20 minutes
+  REFRESH_TOKEN_EXPIRES: 60 * 60 * 24 * 90, // 90 days
 };

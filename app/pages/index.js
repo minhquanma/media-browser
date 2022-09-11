@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { getFileList, getRootPathList } from "api/file.api";
+import { getRootPathList } from "api/file.api";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import AppLayout from "components/AppLayout/AppLayout";
 import { getSession } from "next-auth/client";
 
-import RootList from "components/RootList/RootList";
 import RootListItem from "components/RootList/RootListItem";
 import VideoDialog from "components/VideoDialog/VideoDialog";
 import { isEmpty } from "lodash";
 import { sortAllFiles } from "utils/file";
+import { Box } from "@mui/material";
 
 export async function getServerSideProps(context) {
   const { search, sortBy } = context.query;
@@ -56,7 +56,7 @@ function Home({ data, isSearch }) {
         <Typography variant="h5">
           {isEmpty(data) && "No files found"}
         </Typography>
-        <RootList>
+        <Box>
           {data.map((item) => (
             <RootListItem
               key={item.pathOnDisk}
@@ -64,7 +64,7 @@ function Home({ data, isSearch }) {
               onOpenDialog={handleOpenDialog}
             ></RootListItem>
           ))}
-        </RootList>
+        </Box>
       </Container>
       <VideoDialog
         open={!!dialogData}
